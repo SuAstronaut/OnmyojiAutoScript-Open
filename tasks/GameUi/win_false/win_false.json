@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "win_1",
+    "imageName": "gb_win_1.png",
+    "roiFront": "522,107,187,208",
+    "roiBack": "522,107,187,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登云问翠-战斗胜利"
+  },
+  {
+    "itemName": "false_1",
+    "imageName": "gb_false_1.png",
+    "roiFront": "701,138,181,200",
+    "roiBack": "701,138,181,200",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "登云问翠-战斗失败"
+  },
+  {
+    "itemName": "win_2",
+    "imageName": "gb_win_2.png",
+    "roiFront": "522,107,187,208",
+    "roiBack": "522,107,187,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "茸茨跃动-战斗胜利"
+  },
+  {
+    "itemName": "false_2",
+    "imageName": "gb_false_2.png",
+    "roiFront": "701,138,181,200",
+    "roiBack": "701,138,181,200",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "茸茨跃动-战斗失败"
+  },
+  {
+    "itemName": "win_3",
+    "imageName": "gb_win_3.png",
+    "roiFront": "522,107,187,208",
+    "roiBack": "522,107,187,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "招财纳福-战斗胜利"
+  },
+  {
+    "itemName": "false_3",
+    "imageName": "gb_false_3.png",
+    "roiFront": "516,137,215,198",
+    "roiBack": "516,137,215,198",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "招财纳福-战斗失败"
+  },
+  {
+    "itemName": "win_4",
+    "imageName": "gb_false_4.png",
+    "roiFront": "391,100,100,100",
+    "roiBack": "296,33,414,224",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "藏金台阁-战斗胜利"
+  },
+  {
+    "itemName": "false_4",
+    "imageName": "gb_false_4.png",
+    "roiFront": "384,106,100,100",
+    "roiBack": "346,96,184,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "藏金台阁-战斗失败"
+  }
+]

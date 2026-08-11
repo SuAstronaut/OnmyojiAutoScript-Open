@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "s_greed",
+    "roiFront": "591,15,50,30",
+    "roiBack": "591,15,50,30",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "s_anger",
+    "roiFront": "770,15,50,30",
+    "roiBack": "770,15,50,30",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "s_foolery",
+    "roiFront": "953,15,50,30",
+    "roiBack": "953,15,50,30",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

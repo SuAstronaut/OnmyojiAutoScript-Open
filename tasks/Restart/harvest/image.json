@@ -1,0 +1,218 @@
+[
+  {
+    "itemName": "harvest_jade",
+    "imageName": "harvest_harvest_jade.png",
+    "roiFront": "732,489,34,33",
+    "roiBack": "177,451,973,141",
+    "method": "Template matching mask",
+    "threshold": 0.8,
+    "description": "点击勾玉"
+  },
+  {
+    "itemName": "harvest_sign",
+    "imageName": "harvest_harvest_sign.png",
+    "roiFront": "397,500,24,34",
+    "roiBack": "70,471,889,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到小图标"
+  },
+  {
+    "itemName": "harvest_sign_2",
+    "imageName": "harvest_harvest_sign_2.png",
+    "roiFront": "592,135,100,252",
+    "roiBack": "592,135,100,252",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_sign_999",
+    "imageName": "harvest_harvest_sign_999.png",
+    "roiFront": "345,494,23,29",
+    "roiBack": "51,459,888,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "999签到福袋"
+  },
+  {
+    "itemName": "harvest_mail",
+    "imageName": "harvest_harvest_mail.png",
+    "roiFront": "337,505,37,25",
+    "roiBack": "38,465,880,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件小图标"
+  },
+  {
+    "itemName": "harvest_mail_top_right",
+    "imageName": "harvest_mail_top_right.png",
+    "roiFront": "1137,33,34,26",
+    "roiBack": "1128,5,67,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮件右上角图标"
+  },
+  {
+    "itemName": "harvest_mail_all",
+    "imageName": "harvest_harvest_mail_all.png",
+    "roiFront": "78,597,48,39",
+    "roiBack": "16,543,166,147",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键领取"
+  },
+  {
+    "itemName": "harvest_mail_open",
+    "imageName": "harvest_harvest_mail_open.png",
+    "roiFront": "163,367,45,48",
+    "roiBack": "139,86,100,487",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "有些邮件需要点击一次"
+  },
+  {
+    "itemName": "harvest_soul",
+    "imageName": "harvest_harvest_soul.png",
+    "roiFront": "241,497,38,36",
+    "roiBack": "68,480,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂加成"
+  },
+  {
+    "itemName": "harvest_mail_title",
+    "imageName": "harvest_harvest_mail_title.png",
+    "roiFront": "520,48,245,41",
+    "roiBack": "517,36,284,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "邮箱页面标头"
+  },
+  {
+    "itemName": "harvest_ap",
+    "imageName": "harvest_harvest_ap.png",
+    "roiFront": "721,486,31,38",
+    "roiBack": "206,462,970,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "体力"
+  },
+  {
+    "itemName": "harvest_chat_close",
+    "imageName": "harvest_harvest_chat_close.png",
+    "roiFront": "639,309,35,100",
+    "roiBack": "620,280,70,200",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打开聊天频道会自动关闭"
+  },
+  {
+    "itemName": "harvest_sign_3",
+    "imageName": "harvest_harvest_sign_3.png",
+    "roiFront": "291,495,33,36",
+    "roiBack": "100,473,1014,91",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "签到"
+  },
+  {
+    "itemName": "harvest_sign_4",
+    "imageName": "harvest_harvest_sign_4.png",
+    "roiFront": "587,151,100,228",
+    "roiBack": "547,123,185,281",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_soul_1",
+    "imageName": "harvest_harvest_soul_1.png",
+    "roiFront": "248,501,34,37",
+    "roiBack": "165,389,929,168",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击随机御魂"
+  },
+  {
+    "itemName": "harvest_soul_2",
+    "imageName": "harvest_harvest_soul_2.png",
+    "roiFront": "210,440,112,47",
+    "roiBack": "131,377,264,169",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择第一个御魂"
+  },
+  {
+    "itemName": "harvest_soul_3",
+    "imageName": "harvest_harvest_soul_3.png",
+    "roiFront": "313,489,188,33",
+    "roiBack": "302,472,216,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "harvest_guild_reward",
+    "imageName": "harvest_harvest_guild_reward.png",
+    "roiFront": "244,498,41,42",
+    "roiBack": "200,403,817,157",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮包"
+  },
+  {
+    "itemName": "harvest_back_pet_house",
+    "imageName": "harvest_back_pet_house.png",
+    "roiFront": "20,15,70,70",
+    "roiBack": "20,15,70,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "宠物小屋关闭按钮"
+  },
+  {
+    "itemName": "harvest_zidu",
+    "imageName": "harvest_harvest_zidu.png",
+    "roiFront": "785,475,135,135",
+    "roiBack": "785,475,135,135",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击庭院阴阳师出现的姿度按钮"
+  },
+  {
+    "itemName": "harvest_mail_copy",
+    "imageName": "harvest_harvest_mail_copy.png",
+    "roiFront": "257,509,29,21",
+    "roiBack": "192,472,790,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "mail_red_dots",
+    "imageName": "mail_red_dots.png",
+    "roiFront": "1153,14,36,26",
+    "roiBack": "1141,5,54,51",
+    "method": "Template matching mask",
+    "threshold": 0.8,
+    "description": "邮件未读红点"
+  },
+  {
+    "itemName": "liao_message",
+    "imageName": "liao_message.png",
+    "roiFront": "189,138,35,34",
+    "roiBack": "35,50,358,248",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮消息通知"
+  },
+  {
+    "itemName": "harvest_mail_confirm",
+    "imageName": "harvest_harvest_mail_confirm.png",
+    "roiFront": "687,543,168,64",
+    "roiBack": "687,543,168,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定收取邮件（位置比较靠下不能用通用确定）"
+  }
+]

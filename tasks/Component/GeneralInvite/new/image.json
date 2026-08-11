@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "kuaqu",
+    "imageName": "kuaqu.png",
+    "roiFront": "603,93,72,41",
+    "roiBack": "603,93,72,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "跨区"
+  },
+  {
+    "itemName": "liaoyou",
+    "imageName": "liaoyou.png",
+    "roiFront": "489,95,69,40",
+    "roiBack": "489,95,69,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮友"
+  },
+  {
+    "itemName": "haoyou",
+    "imageName": "haoyou.png",
+    "roiFront": "370,93,71,44",
+    "roiBack": "370,93,71,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "好友"
+  }
+
+]

@@ -1,0 +1,34 @@
+/.idea
+/config
+/log
+/tasks/Restart/big_god/frida-server-17.6.2-android-x86_64
+/desktop.ini
+/toolkit
+/dev_tools
+/oas.exe
+/yys.exe
+/deploy/template.lock
+/deploy/fluentui.py
+
+/compact_log.txt
+/tasks/Hyakkiyakou/agent/test
+/tasks/Hyakkiyakou/unverified*
+/tasks/Hyakkiyakou/settings.json
+/tasks/Hyakkiyakou/main.cp310-win_amd64.pyd
+/tasks/Hyakkiyakou/script_task_1.cp310-win_amd64.pyd
+/tasks/Hyakkiyakou/agent/detect_rarity_old.onnx
+/tasks/Hyakkiyakou/agent/tracker.onnx
+/tasks/Hyakkiyakou/unverified_data
+/tasks/Hyakkiyakou/detect_rarity_unverified_data
+/tasks/Hyakkiyakou/agent/new_character.json
+/dev_tools/task_statistics/task_records.db
+
+# Local Python/runtime artifacts
+__pycache__/
+*.pyc
+*.pyo
+/.pytest_cache/
+/tmp/
+
+# Local handoff notes contain machine-specific paths and are not release files
+/HANDOFF.md

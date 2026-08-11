@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "ocr_active_battle",
+    "roiFront": "81,73,1142,526",
+    "roiBack": "81,73,1142,526",
+    "mode": "FULL",
+    "method": "Default",
+    "keyword": "",
+    "description": "挑战名称（前端填入）"
+  }
+]

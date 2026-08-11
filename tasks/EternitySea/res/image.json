@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "eternity_sea",
+    "imageName": "res_eternity_sea.png",
+    "roiFront": "1139,93,127,416",
+    "roiBack": "1139,93,127,416",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "选择永生之海"
+  }
+]

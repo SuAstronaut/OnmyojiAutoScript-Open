@@ -1,0 +1,33 @@
+# This Python file uses the following encoding: utf-8
+# @author ohspecial
+# github https://github.com/ohspecial
+from enum import Enum
+from pydantic import Field, BaseModel
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
+from tasks.Component.config_base import ConfigBase, Time
+from tasks.Component.config_scheduler import Scheduler
+
+
+class Weekday(str, Enum):
+    Monday = "星期一"
+    Tuesday = "星期二"
+    Wednesday = "星期三"
+    Thursday = "星期四"
+    Friday = "星期五"
+    Saturday = "星期六"
+    Sunday = "星期日"
+
+
+class GuildBanquetTime(BaseModel):
+    # 自定义运行时间
+    day_1: Weekday = Field(default=Weekday.Wednesday, description="每周第一次运行时间设置，注意第一次时间要比第二次时间早")
+    run_time_1: Time = Field(title='第一次运行时间', default=Time(hour=19, minute=0, second=0))
+    day_2: Weekday = Field(default=Weekday.Saturday)
+    run_time_2: Time = Field(title="第二次运行时间", default=Time(hour=19, minute=0, second=0))
+    enable: bool = Field(default=False, description="荒川秘闻9层三只石距战斗")
+
+
+class GuildBanquet(ConfigBase):
+    scheduler: Scheduler = Field(default_factory=Scheduler)
+    guild_banquet_time: GuildBanquetTime = Field(default_factory=GuildBanquetTime)
+    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)

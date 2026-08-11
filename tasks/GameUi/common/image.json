@@ -1,0 +1,128 @@
+[
+  {
+    "itemName": "back_yellow",
+    "imageName": "back_yellow.png",
+    "roiFront": "24,16,48,55",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角黄色返回"
+  },
+  {
+    "itemName": "back_blue",
+    "imageName": "back_blue.png",
+    "roiFront": "32,37,54,52",
+    "roiBack": "3,2,130,114",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "左上角蓝色返回"
+  },
+  {
+    "itemName": "back_red",
+    "imageName": "back_red.png",
+    "roiFront": "1041,111,34,38",
+    "roiBack": "834,15,427,200",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "红色❌"
+  },
+  {
+    "itemName": "back_close",
+    "imageName": "back_close.png",
+    "roiFront": "452,428,79,35",
+    "roiBack": "399,383,217,106",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "取消"
+  },
+  {
+    "itemName": "refresh",
+    "imageName": "refresh.png",
+    "roiFront": "1194,530,24,25",
+    "roiBack": "1167,123,66,445",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "刷新"
+  },
+  {
+    "itemName": "page_all_active",
+    "imageName": "page_all_active.png",
+    "roiFront": "89,19,133,41",
+    "roiBack": "8,5,298,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动总览"
+  },
+  {
+    "itemName": "page_main_goto_page_all_active",
+    "imageName": "page_main_goto_page_all_active.png",
+    "roiFront": "1194,363,23,18",
+    "roiBack": "1174,134,71,439",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院到活动总览"
+  },
+  {
+    "itemName": "skip_button",
+    "imageName": "skip_button.png",
+    "roiFront": "1159,37,51,22",
+    "roiBack": "1141,27,86,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右上跳过按钮（灰色）"
+  },
+  {
+    "itemName": "skip_button_blue",
+    "imageName": "skip_button_blue.png",
+    "roiFront": "1089,119,72,41",
+    "roiBack": "988,7,284,205",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "右上跳过按钮(蓝色)"
+  },
+  {
+    "itemName": "skip_summon",
+    "imageName": "skip_summon.png",
+    "roiFront": "1115,70,52,22",
+    "roiBack": "1048,27,214,106",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "右上跳过按钮(十连召唤跳过)"
+  },
+  {
+    "itemName": "form_team",
+    "imageName": "form_team.png",
+    "roiFront": "934,585,100,100",
+    "roiBack": "867,559,232,148",
+    "method": "Template matching multi scale",
+    "threshold": 0.8,
+    "description": "组队"
+  },
+  {
+    "itemName": "common_fire",
+    "imageName": "fire.png",
+    "roiFront": "989,547,274,160",
+    "roiBack": "989,547,274,160",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击通用挑战"
+  },
+  {
+    "itemName": "again_battle",
+    "imageName": "again_battle.png",
+    "roiFront": "792,451,142,135",
+    "roiBack": "792,451,142,135",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "再次挑战"
+  },
+  {
+    "itemName": "cancel",
+    "imageName": "cancel.png",
+    "roiFront": "465,386,143,76",
+    "roiBack": "377,367,243,198",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "通用取消"
+  }
+]

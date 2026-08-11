@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "de_counter",
+    "roiFront": "1206,689,46,30",
+    "roiBack": "1206,689,46,30",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "计数已经开启多少的"
+  }
+]

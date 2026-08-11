@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "page_netherworld",
+    "imageName": "page_netherworld.png",
+    "roiFront": "158,21,117,32",
+    "roiBack": "158,21,117,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "彼世逢魔页面"
+  },
+  {
+    "itemName": "page_demon_encounter_2",
+    "imageName": "page_demon_encounter_2.png",
+    "roiFront": "158,21,117,32",
+    "roiBack": "158,21,117,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔之时2"
+  },
+  {
+    "itemName": "enter_netherworld",
+    "imageName": "enter_netherworld.png",
+    "roiFront": "495,145,67,50",
+    "roiBack": "495,145,67,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入彼世逢魔页面"
+  },
+  {
+    "itemName": "form_team",
+    "imageName": "form_team.png",
+    "roiFront": "963,608,72,35",
+    "roiBack": "963,608,72,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队"
+  },
+  {
+    "itemName": "fire",
+    "imageName": "fire.png",
+    "roiFront": "1150,603,63,41",
+    "roiBack": "1150,603,63,41",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战"
+  }
+]

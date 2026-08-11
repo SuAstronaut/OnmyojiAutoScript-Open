@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "de_reward",
+    "imageName": "de_reward.png",
+    "roiFront": "520,386,31,24",
+    "roiBack": "1,1,1278,718",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔捡垃圾纸人奖励"
+  }
+]

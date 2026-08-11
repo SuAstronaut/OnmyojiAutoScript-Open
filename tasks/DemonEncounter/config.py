@@ -1,0 +1,84 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+from pydantic import BaseModel, Field
+from tasks.Component.config_base import ConfigBase
+from tasks.Component.config_scheduler import Scheduler
+
+
+class BestDemonBossSelect(BaseModel):
+    enable: bool = Field(
+        default=False,
+        description="是否开启极封魔",
+    )
+    best_demon_kiryou_select: bool = Field(default=False, description='极鬼灵歌姬是否开启')
+    best_demon_shinkirou_select: bool = Field(default=False,
+                                              description='极蜃气楼是否开启')
+    best_demon_tsuchigumo_select: bool = Field(default=False,
+                                               description='极土蜘蛛是否开启')
+    best_demon_gashadokuro_select: bool = Field(default=False,
+                                                description='极荒骷髅是否开启')
+    best_demon_namazu_select: bool = Field(default=False, description='极地震鲇是否开启')
+
+
+# 不同封魔boss的御魂配置
+class DemonConfig(BaseModel):
+    enable: bool = Field(
+        default=False,
+        description="通过预设名称来匹配普通封魔御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
+    )
+    # 周一
+    demon_kiryou_utahime: str = Field(default="-1,-1", description="鬼灵歌姬御魂")
+    # 周二
+    demon_shinkirou: str = Field(default="-1,-1", description="蜃气楼御魂")
+    # 周三 土蜘蛛
+    demon_tsuchigumo: str = Field(default="-1,-1", description="土蜘蛛御魂")
+    # 周四 荒骷髅
+    demon_gashadokuro: str = Field(default="-1,-1", description="荒骷髅御魂")
+    # 周五 地震鲇
+    demon_namazu: str = Field(default="-1,-1", description="地震鲇御魂")
+    # 周六 胧车
+    demon_oboroguruma: str = Field(default="-1,-1", description="胧车御魂")
+    # 周日 夜荒魂
+    demon_nightly_aramitama: str = Field(default="-1,-1", description="夜荒魂御魂")
+
+
+# 不同极封魔boss的御魂配置
+class BestDemonConfig(BaseModel):
+    enable: bool = Field(
+        default=False,
+        description="通过预设名称来匹配极封魔御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
+    )
+    # 周一 鬼灵歌姬
+    best_demon_kiryou_utahime: str = Field(default="-1,-1", description="极鬼灵歌姬御魂")
+    # 周二 极蜃气楼
+    best_demon_shinkirou: str = Field(default="-1,-1", description="极蜃气楼御魂")
+    # 周三 极土蜘蛛
+    best_demon_tsuchigumo: str = Field(default="-1,-1", description="极土蜘蛛御魂")
+    # 周四 极荒骷髅
+    best_demon_gashadokuro: str = Field(default="-1,-1", description="极荒骷髅御魂")
+    # 周五 极地震鲇
+    best_demon_namazu: str = Field(default="-1,-1", description="极地震鲇御魂")
+
+
+class UtilizeScheduler(Scheduler):
+    priority: int = Field(default=2, description='priority_help')
+
+
+class SwitchSoulConfig(BaseModel):
+    enable: bool = Field(default=True, description='enable_help')
+    switch_group_team: str = Field(default='-1,-1', description='switch_group_team_help')
+    # 是否勾玉换取100体力
+    enable_100ap: bool = Field(default=False)
+    # 是否进行战斗（小鬼王、打怪）
+    enable_four: bool = Field(default=True)
+    # 是否进行BOSS战斗
+    enable_boss: bool = Field(default=True)
+
+
+class DemonEncounter(ConfigBase):
+    scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
+    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    best_demon_boss_config: BestDemonBossSelect = Field(default_factory=BestDemonBossSelect)
+    demon_soul_config: DemonConfig = Field(default_factory=DemonConfig)
+    best_demon_soul_config: BestDemonConfig = Field(default_factory=BestDemonConfig)

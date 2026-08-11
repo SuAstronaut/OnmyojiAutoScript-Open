@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "wqc_lock",
+    "imageName": "chanllenge_wqc_lock.png",
+    "roiFront": "620,528,27,31",
+    "roiBack": "620,528,27,31",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "wqc_unlock",
+    "imageName": "chanllenge_wqc_unlock.png",
+    "roiFront": "621,527,26,28",
+    "roiBack": "621,527,26,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "wqc_fire",
+    "imageName": "chanllenge_wqc_fire.png",
+    "roiFront": "1100,596,61,29",
+    "roiBack": "1059,551,139,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "式神碎片挑战"
+  }
+]

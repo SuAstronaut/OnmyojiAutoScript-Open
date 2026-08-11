@@ -1,0 +1,92 @@
+[
+  {
+    "itemName": "n_waiting",
+    "imageName": "nian_n_waiting.png",
+    "roiFront": "735,28,54,51",
+    "roiBack": "735,28,54,51",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "等待进入，也是关闭按钮"
+  },
+  {
+    "itemName": "n_huabei",
+    "imageName": "nian_n_huabei.png",
+    "roiFront": "409,330,156,45",
+    "roiBack": "409,330,156,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "华北年兽"
+  },
+  {
+    "itemName": "battle_over",
+    "imageName": "nian_battle_over.png",
+    "roiFront": "531,212,205,61",
+    "roiBack": "531,212,205,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "年兽战斗结束，通关奖励"
+  },
+  {
+    "itemName": "n_page",
+    "imageName": "nian_n_page.png",
+    "roiFront": "94,29,129,40",
+    "roiBack": "75,10,193,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "年兽来袭页面"
+  },
+  {
+    "itemName": "goto_nian",
+    "imageName": "goto_nian.png",
+    "roiFront": "1190,219,39,32",
+    "roiBack": "1160,124,92,448",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入年兽按钮"
+  },
+  {
+    "itemName": "nian_search",
+    "imageName": "nian_search.png",
+    "roiFront": "819,647,43,49",
+    "roiBack": "798,630,83,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "搜索年兽"
+  },
+  {
+    "itemName": "is_nian",
+    "imageName": "is_nian.png",
+    "roiFront": "605,261,71,60",
+    "roiBack": "605,261,71,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "找到了年兽"
+  },
+  {
+    "itemName": "fire_team",
+    "imageName": "fire_team.png",
+    "roiFront": "1116,493,47,50",
+    "roiBack": "1116,493,47,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "组队挑战"
+  },
+  {
+    "itemName": "create_team",
+    "imageName": "create_team.png",
+    "roiFront": "569,491,141,50",
+    "roiBack": "569,491,141,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "创建队伍"
+  },
+  {
+    "itemName": "fire_button",
+    "imageName": "fire_button.png",
+    "roiFront": "1193,618,50,49",
+    "roiBack": "1193,618,50,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "挑战按钮"
+  }
+]

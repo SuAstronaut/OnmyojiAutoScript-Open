@@ -1,0 +1,56 @@
+[
+  {
+    "itemName": "ui_sure",
+    "imageName": "ui_ui_sure.png",
+    "roiFront": "661,398,198,187",
+    "roiBack": "661,398,198,187",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定"
+  },
+    {
+    "itemName": "ui_confirm",
+    "imageName": "ui_ui_confirm.png",
+    "roiFront": "655,300,260,180",
+    "roiBack": "655,300,260,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认"
+  },
+  {
+    "itemName": "ui_reward",
+    "imageName": "ui_ui_reward.png",
+    "roiFront": "481,185,317,42",
+    "roiBack": "464,142,350,145",
+    "method": "Template matching",
+    "threshold": 0.73,
+    "description": "'获得奖励' 四个大字"
+  },
+  {
+    "itemName": "reward",
+    "imageName": "ui_ui_award.png",
+    "roiFront": "577,499,100,100",
+    "roiBack": "530,408,199,220",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "结算达摩（魂）"
+  },
+  {
+    "itemName": "ui_uncheck",
+    "imageName": "ui_ui_uncheck.png",
+    "roiFront": "567,343,33,36",
+    "roiBack": "497,303,216,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "未勾选"
+  },
+  {
+    "itemName": "ui_check",
+    "imageName": "ui_ui_check.png",
+    "roiFront": "564,341,40,38",
+    "roiBack": "512,329,164,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "勾选"
+  }
+]

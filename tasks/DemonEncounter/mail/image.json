@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "mail_answer_error",
+    "imageName": "mail_answer_error.png",
+    "roiFront": "792,277,61,44",
+    "roiBack": "415,225,478,302",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔答题错误"
+  },
+  {
+    "itemName": "mail_answer_success",
+    "imageName": "mail_answer_success.png",
+    "roiFront": "795,446,59,55",
+    "roiBack": "415,225,478,302",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔答题正确"
+  }
+]

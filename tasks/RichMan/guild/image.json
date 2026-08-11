@@ -1,0 +1,191 @@
+[
+  {
+    "itemName": "guild_shrine",
+    "imageName": "guild_guild_shrine.png",
+    "roiFront": "869,623,64,62",
+    "roiBack": "869,623,64,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神社"
+  },
+  {
+    "itemName": "guild_store",
+    "imageName": "guild_guild_store.png",
+    "roiFront": "651,420,212,161",
+    "roiBack": "651,420,212,180",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "神社界面-功勋商店"
+  },
+  {
+    "itemName": "guild_store_page",
+    "imageName": "guild_guild_store_page.png",
+    "roiFront": "518,61,92,39",
+    "roiBack": "518,61,92,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "功勋商店page"
+  },
+  {
+    "itemName": "guild_store_procurement",
+    "imageName": "guild_guild_store_procurement.png",
+    "roiFront": "949,423,108,32",
+    "roiBack": "949,423,108,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮内采办"
+  },
+  {
+    "itemName": "guild_store_procurement_page",
+    "imageName": "guild_guild_store_procurement_page.png",
+    "roiFront": "518,61,92,39",
+    "roiBack": "518,61,92,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮内采办page"
+  },
+  {
+    "itemName": "lottery_box",
+    "imageName": "lottery_box.png",
+    "roiFront": "792,206,73,70",
+    "roiBack": "256,132,712,476",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同心奖箱"
+  },
+  {
+    "itemName": "lottery_box_buy",
+    "imageName": "lottery_box_buy.png",
+    "roiFront": "552,506,169,56",
+    "roiBack": "552,506,169,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同心奖箱购买"
+  },
+  {
+    "itemName": "guild_close_red",
+    "imageName": "guild_guild_close_red.png",
+    "roiFront": "1029,120,53,57",
+    "roiBack": "1029,120,53,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "guild_blue",
+    "imageName": "guild_guild_blue.png",
+    "roiFront": "794,186,74,73",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "蓝票"
+  },
+  {
+    "itemName": "guild_scrap",
+    "imageName": "guild_guild_scrap.png",
+    "roiFront": "570,439,71,68",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.4,
+    "description": "黑蛋碎片"
+  },
+  {
+    "itemName": "guild_skin",
+    "imageName": "guild_guild_skin.png",
+    "roiFront": "795,438,71,72",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "皮肤券"
+  },
+  {
+    "itemName": "exp",
+    "imageName": "Screenshots_exp.png",
+    "roiFront": "569,465,73,72",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "经验御札"
+  },
+  {
+    "itemName": "fl",
+    "imageName": "Screenshots_fl.png",
+    "roiFront": "344,464,73,72",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "风铃"
+  },
+  {
+    "itemName": "liaobao",
+    "imageName": "Screenshots_libao.png",
+    "roiFront": "566,208,76,80",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮礼包"
+  },
+  {
+    "itemName": "yuhun",
+    "imageName": "Screenshots_yuhun.png",
+    "roiFront": "344,188,71,70",
+    "roiBack": "288,185,635,379",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂"
+  },
+  {
+  "itemName": "guild_skin_check",
+  "imageName": "guild_guild_skin.png",
+  "roiFront": "795,438,71,72",
+    "roiBack": "288,185,635,379",
+  "method": "Template matching",
+  "threshold": 0.8,
+  "description": "皮肤券判断是否到末端"
+  },
+  {
+    "itemName": "guild_check_scrap",
+    "imageName": "guild_guild_check_scrap.png",
+    "roiFront": "561,429,90,88",
+    "roiBack": "561,429,90,88",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "黑碎购买检查"
+  },
+  {
+    "itemName": "guild_check_scrap2",
+    "imageName": "guild_guild_check_scrap.png",
+    "roiFront": "593,250,90,88",
+    "roiBack": "593,250,90,88",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "黑碎购买检查2"
+  },
+  {
+    "itemName": "guild_buy_scrap",
+    "imageName": "guild_guild_buy_scrap.png",
+    "roiFront": "579,495,129,50",
+    "roiBack": "579,495,129,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "购买黑碎"
+  },
+  {
+    "itemName": "guild_store_end",
+    "imageName": "guild_store_end.png",
+    "roiFront": "541,409,134,137",
+    "roiBack": "292,376,618,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "功勋商店顶部"
+  },
+  {
+    "itemName": "guild_store_top",
+    "imageName": "guild_store_top.png",
+    "roiFront": "345,213,71,70",
+    "roiBack": "288,160,618,210",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "功勋商店底部"
+  }
+]

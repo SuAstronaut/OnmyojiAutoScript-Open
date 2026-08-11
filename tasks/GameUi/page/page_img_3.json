@@ -1,0 +1,218 @@
+[
+  {
+    "itemName": "main_goto_shikigami_records",
+    "imageName": "page_main_goto_shikigami_records.png",
+    "roiFront": "1098,611,56,64",
+    "roiBack": "1084,589,93,106",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "式神录"
+  },
+  {
+    "itemName": "main_goto_onmyodo",
+    "imageName": "page_main_goto_onmyodo.png",
+    "roiFront": "992,614,51,60",
+    "roiBack": "992,614,51,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_friends",
+    "imageName": "page_main_goto_friends.png",
+    "roiFront": "879,623,55,55",
+    "roiBack": "33,591,1153,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_daily",
+    "imageName": "page_main_goto_daily.png",
+    "roiFront": "779,612,51,67",
+    "roiBack": "33,591,1153,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "进入花合战"
+  },
+  {
+    "itemName": "main_goto_mall",
+    "imageName": "page_main_goto_mall.png",
+    "roiFront": "663,661,41,22",
+    "roiBack": "33,591,1153,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_guild",
+    "imageName": "page_main_goto_guild.png",
+    "roiFront": "540,611,50,54",
+    "roiBack": "33,591,1153,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_team",
+    "imageName": "page_main_goto_team.png",
+    "roiFront": "437,625,38,48",
+    "roiBack": "366,606,192,83",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_collection",
+    "imageName": "page_main_goto_collection.png",
+    "roiFront": "92,621,36,41",
+    "roiBack": "51,596,159,85",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "check_records",
+    "imageName": "page_check_records.png",
+    "roiFront": "269,71,55,50",
+    "roiBack": "269,71,55,50",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_onmyodo",
+    "imageName": "page_check_onmyodo.png",
+    "roiFront": "1166,117,84,547",
+    "roiBack": "1166,117,84,547",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_friends",
+    "imageName": "page_check_friends.png",
+    "roiFront": "594,50,146,31",
+    "roiBack": "519,10,290,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "page_check_friends"
+  },
+  {
+    "itemName": "check_daily",
+    "imageName": "page_check_daily.png",
+    "roiFront": "102,23,97,36",
+    "roiBack": "20,7,236,74",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "page_check_daily"
+  },
+  {
+    "itemName": "check_mall",
+    "imageName": "page_check_mall.png",
+    "roiFront": "512,271,66,87",
+    "roiBack": "512,271,66,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "商店页面"
+  },
+  {
+    "itemName": "check_mall_2",
+    "imageName": "page_check_mall_2.png",
+    "roiFront": "170,31,123,22",
+    "roiBack": "170,31,123,22",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "商店页面2"
+  },
+  {
+    "itemName": "check_guild",
+    "imageName": "page_check_guild.png",
+    "roiFront": "1072,630,49,46",
+    "roiBack": "1072,630,49,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_realm_shin",
+    "imageName": "page_realm_shin.png",
+    "roiFront": "175,460,54,58",
+    "roiBack": "22,380,393,308",
+    "method": "Template matching",
+    "threshold": 0.9,
+    "description": "结界界面"
+  },
+  {
+    "itemName": "check_guild_close",
+    "imageName": "page_check_guild_close.png",
+    "roiFront": "777,90,36,34",
+    "roiBack": "592,16,392,257",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮种树升级提示"
+  },
+  {
+    "itemName": "check_team",
+    "imageName": "page_check_team.png",
+    "roiFront": "92,24,77,38",
+    "roiBack": "17,5,232,102",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_collection",
+    "imageName": "page_check_collection.png",
+    "roiFront": "380,620,100,100",
+    "roiBack": "394,610,854,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_mall",
+    "imageName": "page_back_mall.png",
+    "roiFront": "28,33,50,51",
+    "roiBack": "28,33,50,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "new",
+    "imageName": "image_name.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "back_act_list",
+    "imageName": "page_back_act_list.png",
+    "roiFront": "1165,65,51,47",
+    "roiBack": "1124,23,131,133",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页返回庭院"
+  },
+  {
+    "itemName": "dlc_close",
+    "imageName": "store_dlc_close.png",
+    "roiFront": "916,147,24,25",
+    "roiBack": "916,147,24,25",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "下载拓展包弹窗"
+  },
+  {
+    "itemName": "back_battle",
+    "imageName": "page_back_battle.png",
+    "roiFront": "24,19,40,38",
+    "roiBack": "0,0,90,85",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "退出战斗按钮"
+  }
+]

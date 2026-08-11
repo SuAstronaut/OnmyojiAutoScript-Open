@@ -1,0 +1,21 @@
+{
+  "name": "layer_list",
+  "direction": "vertical",
+  "type": "ocr",
+  "roiBack": "125,88,100,602",
+  "description": "这个是御魂界面选择不同层数的",
+  "list": [
+    {
+      "itemName": "贪之阵",
+      "roiFront": "281,135,39,102"
+    },
+    {
+      "itemName": "嗔之阵",
+      "roiFront": "280,253,39,85"
+    },
+    {
+      "itemName": "痴之阵",
+      "roiFront": "283,422,43,93"
+    }
+  ]
+}

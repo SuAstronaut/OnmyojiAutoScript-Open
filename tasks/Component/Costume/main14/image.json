@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "main_goto_town_14",
+    "imageName": "main14_main_goto_town_14.png",
+    "roiFront": "654,303,382,86",
+    "roiBack": "654,303,382,86",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-町"
+  },
+  {
+    "itemName": "main_goto_summon_14",
+    "imageName": "main14_main_goto_summon_14.png",
+    "roiFront": "770,167,475,84",
+    "roiBack": "770,167,475,84",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-召唤"
+  },
+  {
+    "itemName": "main_goto_summon_14_1",
+    "imageName": "main14_main_goto_summon_14_1.png",
+    "roiFront": "770,167,475,84",
+    "roiBack": "770,167,475,84",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-召唤-1"
+  },
+    {
+    "itemName": "main_goto_summon_14_2",
+    "imageName": "main14_main_goto_summon_14_2.png",
+    "roiFront": "770,167,475,84",
+    "roiBack": "770,167,475,84",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-召唤-2"
+  },
+  {
+    "itemName": "pet_house_14",
+    "imageName": "main14_pet_house_14.png",
+    "roiFront": "841,356,299,59",
+    "roiBack": "841,356,299,59",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-宠物屋"
+  },
+  {
+    "itemName": "pet_house_14_1",
+    "imageName": "main14_pet_house_14_1.png",
+    "roiFront": "841,356,299,59",
+    "roiBack": "841,356,299,59",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-宠物屋-1"
+  },
+  {
+    "itemName": "main_goto_exploration_14",
+    "imageName": "main14_main_goto_exploration_14.png",
+    "roiFront": "464,160,324,75",
+    "roiBack": "464,160,324,75",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-探索"
+  },
+    {
+    "itemName": "main_goto_exploration_14_1",
+    "imageName": "main14_main_goto_exploration_14_1.png",
+    "roiFront": "464,160,324,75",
+    "roiBack": "464,160,324,75",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "绮梦茨庭-探索_1"
+  }
+]

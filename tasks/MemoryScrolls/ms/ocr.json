@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "ms_accrued_scores",
+    "roiFront": "921,555,62,35",
+    "roiBack": "921,555,62,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "累计绘卷分数"
+  },
+  {
+    "itemName": "ms_this_scores",
+    "roiFront": "921,518,62,35",
+    "roiBack": "921,518,62,35",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "本次捐献绘卷分数"
+  },
+  {
+    "itemName": "ms_progress",
+    "roiFront": "424,558,35,28",
+    "roiBack": "424,558,35,28",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "绘卷进度"
+  },
+  {
+    "itemName": "ms_count_s",
+    "roiFront": "543,313,60,25",
+    "roiBack": "543,313,60,25",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "小碎片掉落数量"
+  },
+  {
+    "itemName": "ms_my_ranking",
+    "roiFront": "832,562,60,38",
+    "roiBack": "832,562,60,38",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "绘卷排名"
+  }
+]

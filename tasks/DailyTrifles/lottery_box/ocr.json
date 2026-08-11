@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "lottery_number",
+    "roiFront": "424,460,49,27",
+    "roiBack": "424,460,49,27",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "抽奖次数"
+  }
+]

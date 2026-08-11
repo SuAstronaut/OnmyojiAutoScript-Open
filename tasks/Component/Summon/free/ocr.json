@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "free_ticket",
+    "roiFront": "619,622,70,26",
+    "roiBack": "619,622,70,26",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  }
+]

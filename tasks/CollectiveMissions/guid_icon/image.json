@@ -1,0 +1,30 @@
+[
+  {
+    "itemName": "add_guid_icon",
+    "imageName": "add_guid_icon.png",
+    "roiFront": "267,489,29,34",
+    "roiBack": "267,489,29,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "捐献勾玉加号"
+  },
+  {
+    "itemName": "hua_lun_button",
+    "imageName": "hua_lun_button.png",
+    "roiFront": "503,368,21,42",
+    "roiBack": "421,345,431,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "滑动捐献图标"
+  },
+  {
+    "itemName": "juan_gide",
+    "imageName": "juan_gide.png",
+    "roiFront": "577,528,41,36",
+    "roiBack": "577,528,41,36",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "捐勾玉"
+  }
+
+]

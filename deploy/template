@@ -1,0 +1,52 @@
+Deploy:
+  Git:
+    Repository: https://gitee.com/pattering-rain/yys.git
+    Branch: master
+    GitExecutable: ./toolkit/Git/mingw64/bin/git.exe
+    GitProxy: null
+    AutoUpdate: true
+    KeepLocalChanges: false
+
+  Python:
+    PythonExecutable: ./toolkit/python.exe
+    PypiMirror: https://mirrors.aliyun.com/pypi/simple/
+    InstallDependencies: true
+    RequirementsFile: requirements.txt
+
+  Adb:
+    AdbExecutable: ./toolkit/Lib/site-packages/adbutils/binaries/adb.exe
+    ReplaceAdb: true
+    AutoConnect: true
+    InstallUiautomator2: true
+
+  Ocr:
+    UseOcrServer: false
+    StartOcrServer: false
+    OcrServerPort: 22268
+    OcrClientAddress: 127.0.0.1:22268
+    UseGpu: false
+
+
+  Update:
+    EnableReload: true
+    CheckUpdateInterval: 5
+    AutoRestartTime: 03:50
+
+  Misc:
+    DiscordRichPresence: false
+
+  RemoteAccess:
+    EnableRemoteAccess: false
+    SSHUser: null
+    SSHServer: null
+    SSHExecutable: ssh
+
+  Webui:
+    WebuiHost: 0.0.0.0
+    WebuiPort: 22288
+    Language: zh-CN
+    Theme: default
+    DpiScaling: true
+    Password: null
+    CDN: false
+    Run: null

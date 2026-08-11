@@ -1,0 +1,621 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+
+import zerorpc
+import zmq
+import msgpack
+import random
+import re
+import cv2
+import time
+import os
+import inflection
+import asyncio
+import json
+import threading
+import urllib.request
+from typing import Callable
+from datetime import datetime, timedelta
+from pathlib import Path
+from cached_property import cached_property
+from pydantic import BaseModel, ValidationError
+from threading import Thread
+from multiprocessing.queues import Queue
+
+
+from module.config.utils import convert_to_underscore
+from module.config.config import Config
+from module.config.config_model import ConfigModel
+from module.device.device import Device
+from module.base.utils import load_module
+from module.base.decorator import del_cached_property
+from module.logger import logger
+from module.exception import *
+from module.server.i18n import I18n
+from module.ocr.rpc import ensure_ocr_server_started
+from module.server.setting import State
+
+
+
+_log_switch_lock = threading.Lock()#线程锁
+
+
+class Script:
+    TASK_END_NOTIFY_LIST = [
+        'Orochi',
+        'RealmRaid',
+        'ReturnGift',
+        'RyouToppa',
+        'SixRealms',
+        'FallenSun',
+        'Exploration',
+        'EvoZone',
+        'Dokan',
+        'ActivityShikigami',
+        'AbyssShadows',
+        'EternitySea',
+        'BondlingFairyland',
+        'MultiDailyAltAcc',
+    ]
+
+    # 不需要游戏运行的任务，跳过 app_is_running 检测
+    SKIP_APP_CHECK_TASKS = [
+        'Restart',
+        'AutoCheckinBigGod',
+    ]
+
+    def __init__(self, config_name: str ='oas') -> None:
+        logger.hr('Start', level=0)
+        self.server = None
+        self.state_queue: Queue = None
+        self.gui_update_task: Callable = None  # 回调函数, gui进程注册当每次config更新任务的时候更新gui的信息
+        self.config_name = config_name
+        # Skip first restart
+        self.is_first_task = True
+        # Failure count of tasks (legacy; preserved for back-compat references but no longer drives exit)
+        # Key: str, task name, value: int, failure count
+        self.failure_record = {}
+        # Kept for scheduler compatibility. The original device layer handles
+        # emulator failures through the Restart task instead of full_recovery.
+        self.recovery_failure_count = 0
+        self._needs_recovery = False
+        # 运行loop的线程
+        self.loop_thread: Thread = None
+
+    @cached_property
+    def config(self) -> "Config":
+        try:
+            from module.config.config import Config
+            config = Config(config_name=self.config_name)
+            return config
+        except RequestHumanTakeover:
+            logger.critical('Request human takeover')
+            exit(1)
+        except Exception as e:
+            logger.exception(e)
+            exit(1)
+
+    @cached_property
+    def device(self) -> "Device":
+        try:
+            from module.device.device import Device
+            device = Device(config=self.config)
+            return device
+        except RequestHumanTakeover:
+            # 初始化阶段 full_recovery 失败，主动请求 server 级重启并退出。
+            logger.critical('Request human takeover during device init, request server restart')
+            self._exit_for_server_restart()
+        except Exception as e:
+            logger.exception(e)
+            exit(1)
+
+    @cached_property
+    def checker(self):
+        """
+        占位函数，在alas中是检查服务器是否正常的
+        :return:
+        """
+        return None
+
+    def save_error_log(self):
+        """
+        Save last 60 screenshots in ./log/error/<timestamp>
+        Save logs to ./log/error/<timestamp>/log.txt
+        """
+        from module.base.utils import save_image
+        from module.handler.sensitive_info import (handle_sensitive_image,
+                                                   handle_sensitive_logs)
+        if self.config.script.error.save_error:
+            if not os.path.exists('./log/error'):
+                os.mkdir('./log/error')
+            folder_name = str(int(time.time() * 1000))
+            folder = f'./log/error/{folder_name}'
+            logger.warning(f'Saving error: {folder}')
+            logger.info('保存详细错误的日志和截图到路径:')
+            logger.info(f'{str( Path.cwd() / "log" / "error" / folder_name)}')
+            os.mkdir(folder)
+            for data in self.device.screenshot_deque:
+                image_time = datetime.strftime(data['time'], '%Y-%m-%d_%H-%M-%S-%f')
+                image = handle_sensitive_image(data['image'])
+                save_image(image, f'{folder}/{image_time}.png')
+            with open(logger.log_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                start = 0
+                for index, line in enumerate(lines):
+                    line = line.strip(' \r\t\n')
+                    if re.match('^═{15,}$', line):
+                        start = index
+                lines = lines[start - 2:]
+                lines = handle_sensitive_logs(lines)
+            with open(f'{folder}/log.txt', 'w', encoding='utf-8') as f:
+                f.writelines(lines)
+
+    def init_server(self, port: int) -> int:
+        """
+        初始化zerorpc服务，返回端口号
+        :return:
+        """
+        self.server = zerorpc.Server(self)
+        try:
+            self.server.bind(f'tcp://127.0.0.1:{port}')
+            return port
+        except zmq.error.ZMQError:
+            logger.error(f"Ocr server cannot bind on port {port}")
+            return None
+
+    def run_server(self) -> None:
+        """
+        启动zerorpc服务
+        :return:
+        """
+        self.server.run()
+
+    def gui_args(self, task: str) -> str:
+        """
+        获取给gui显示的参数
+        :return:
+        """
+        return self.config.gui_args(task=task)
+
+    def gui_menu(self) -> str:
+        """
+        获取给gui显示的菜单
+        :return:
+        """
+        return self.config.gui_menu
+
+    def gui_task(self, task: str) -> str:
+        """
+        获取给gui显示的任务 的参数的具体值
+        :return:
+        """
+        return self.config.model.gui_task(task=task)
+
+    def gui_set_task(self, task: str, group: str, argument: str, value) -> bool:
+        """
+        设置给gui显示的任务 的参数的具体值
+        :return:
+        """
+        # 验证参数
+        task = convert_to_underscore(task)
+        group = convert_to_underscore(group)
+        argument = convert_to_underscore(argument)
+        # pandtic验证
+        if isinstance(value, str):
+            if len(value) == 8:
+                try:
+                    value = datetime.strptime(value, '%H:%M:%S').time()
+                except ValueError:
+                    pass
+
+
+        path = f'{task}.{group}.{argument}'
+        task_object = getattr(self.config.model, task, None)
+        group_object = getattr(task_object, group, None)
+        argument_object = getattr(group_object, argument, None)
+
+        if argument_object is None:
+            logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
+            return False
+
+        try:
+            setattr(group_object, argument, value)
+            argument_object = getattr(group_object, argument, None)
+            logger.info(f'Set arg {task}.{group}.{argument}.{argument_object}')
+            self.config.save()  # 我是没有想到什么方法可以使得属性改变自动保存的
+            return True
+        except ValidationError as e:
+            logger.error(e)
+            return False
+
+    @zerorpc.stream
+    def gui_mirror_image(self):
+        """
+        获取给gui显示的镜像
+        :return: cv2的对象将 numpy 数组转换为字节串。接下来MsgPack 进行序列化发送方将图像数据转换为字节串
+        """
+        # return msgpack.packb(cv2.imencode('.jpg', self.device.screenshot())[1].tobytes())
+        img = cv2.cvtColor(self.device.screenshot(), cv2.COLOR_RGB2BGR)
+        self.device.stuck_record_clear()
+        ret, buffer = cv2.imencode('.jpg', img)
+        yield buffer.tobytes()
+
+    def _gui_update_tasks(self) -> None:
+        """
+        获取更新任务后 pending waiting 的任务 和 当前的任务的数据。打包给gui显示
+        :return:
+        """
+        data = {}
+        pending = []
+        waiting = []
+        task = {}
+        if self.config.task is not None and self.config.task.next_run < datetime.now():
+            task["name"] = self.config.task.command
+            task["next_run"] = str(self.config.task.next_run)
+        data["task"] = task
+
+        for p in self.config.pending_task[1:]:
+            item = {"name": p.command, "next_run": str(p.next_run)}
+            pending.append(item)
+
+        for w in self.config.waiting_task:
+            item = {"name": w.command, "next_run": str(w.next_run)}
+            waiting.append(item)
+
+
+        data["pending"] = pending
+        data["waiting"] = waiting
+
+        if self.gui_update_task is not None:
+            self.gui_update_task(data)
+
+    def _gui_set_status(self, status: str) -> None:
+        """
+        设置给gui显示的状态
+        :param status: 可以在gui中显示的状态 有 "Init", "Empty"(不显示), "Run"(运行中), "Error", "Free"(空闲)
+        :return:
+        """
+        data = {"status": status}
+        if self.gui_update_task is not None:
+            self.gui_update_task(data)
+
+    def gui_task_list(self) -> str:
+        """
+        获取给gui显示的任务列表
+        :return:
+        """
+        result = {}
+        for key, value in self.config.model.dict().items():
+            if isinstance(value, str):
+                continue
+            if key == "restart":
+                continue
+            if "scheduler" not in value:
+                continue
+
+            scheduler = value["scheduler"]
+            item = {"enable": scheduler["enable"],
+                    "next_run": str(scheduler["next_run"])}
+            key = self.config.model.type(key)
+            result[key] = item
+        return json.dumps(result)
+
+
+
+
+    def wait_until(self, future):
+        """
+        Wait until a specific time.
+
+        Args:
+            future (datetime):
+
+        Returns:
+            bool: True if wait finished, False if config changed.
+        """
+        future = future + timedelta(seconds=1)
+        self.config.start_watching()
+        while 1:
+            if datetime.now() > future:
+                return True
+            # if self.stop_event is not None:
+            #     if self.stop_event.is_set():
+            #         logger.info("Update event detected")
+            #         logger.info(f"[{self.config_name}] exited. Reason: Update")
+            #         exit(0)
+
+            time.sleep(5)
+
+            if self.config.should_reload():
+                return False
+
+    def get_next_task(self) -> str:
+        """
+        获取下一个任务的名字, 大驼峰。
+        :return:
+        """
+        while 1:
+            task = self.config.get_next()
+            self.config.task = task
+            if self.state_queue:
+                self.state_queue.put({"schedule": self.config.get_schedule_data()})
+
+            # from module.base.resource import release_resources
+            # if self.config.task.command != 'Alas':
+            #     release_resources(next_task=task.command)
+
+            if task.next_run > datetime.now():
+                logger.info(f'Wait until {task.next_run} for task `{task.command}`')
+                # self.is_first_task = False
+                method = self.config.script.optimization.when_task_queue_empty
+                close_game_limit_time = self.config.script.optimization.close_game_wait_duration
+                close_emulator_limit_time = self.config.script.optimization.close_emulator_wait_duration
+
+                if method == 'goto_main':
+                    self._handle_goto_main()
+                elif method == 'close_game':
+                    self._handle_close_game(task, close_game_limit_time)
+                elif method in ['close_emulator_or_goto_main', 'close_emulator_or_close_game']:
+                    self._handle_close_emulator_or(task, close_game_limit_time, close_emulator_limit_time, method)
+                else:
+                    logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
+
+                self.device.release_during_wait()
+
+                if not self.wait_until(task.next_run):
+                    del_cached_property(self, 'config')
+                    continue
+            else:
+                # 任务已到点：若当前落在该任务的禁止运行时间段内，推迟到区间结束并重新选择任务，
+                # 避免调度层先因游戏未运行触发 Restart 造成顶号（禁止时间段内本不应上号）
+                forbidden_end = self.config.get_forbidden_time_end(task.command)
+                if forbidden_end is not None:
+                    logger.info(f'Task `{task.command}` 处于禁止运行时间段内，推迟到 {forbidden_end}')
+                    self.config.task_delay(task.command, target=forbidden_end, server=False)
+                    continue
+            break
+
+        return task.command
+
+    def _handle_goto_main(self):
+        logger.info('Goto main page during wait')
+        self.run('GotoMain')
+
+    def _handle_close_game(self, task, close_game_limit_time):
+        if task.next_run > datetime.now() + timedelta(hours=close_game_limit_time.hour, minutes=close_game_limit_time.minute, seconds=close_game_limit_time.second):
+            logger.info('Close game during wait')
+            self.device.app_stop()
+        else:
+            self._handle_goto_main()
+
+    def _handle_close_emulator_or(self, task, close_game_limit_time, close_emulator_limit_time, method):
+        if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
+            logger.info('Close emulator during wait')
+            self.device.emulator_stop()
+        elif method == 'close_emulator_or_goto_main':
+            self._handle_goto_main()
+        else:
+            self._handle_close_game(task, close_game_limit_time)
+
+    @staticmethod
+    def _normalize_task_name(task_name: str) -> str:
+        return task_name.strip().lower()
+
+    def _resolve_task_end_name(self, command: str, error: TaskEnd) -> str:
+        task_name = command
+        if error.args and isinstance(error.args[0], str) and error.args[0].strip():
+            task_name = error.args[0].strip()
+        logger.info(f'TaskEnd final task name: {task_name}')
+        return task_name
+
+    def _should_notify_task_end(self, task_name: str) -> bool:
+        notify_task_end_list = self.TASK_END_NOTIFY_LIST
+        if isinstance(notify_task_end_list, str):
+            notify_task_end_list = [notify_task_end_list]
+        if not isinstance(notify_task_end_list, (list, tuple, set)):
+            notify_task_end_list = []
+
+        normalized_notify_list = {
+            self._normalize_task_name(item)
+            for item in notify_task_end_list
+            if isinstance(item, str) and item.strip()
+        }
+        logger.info(f'TaskEnd notify list: {list(normalized_notify_list)}')
+
+        if not normalized_notify_list:
+            logger.info('TaskEnd notify list is empty, skip notify')
+            return False
+
+        normalized_task_name = self._normalize_task_name(task_name)
+        hit = normalized_task_name in normalized_notify_list
+        logger.info(f'TaskEnd notify list {"hit" if hit else "miss"}: {task_name}')
+        return hit
+
+    def run(self, command: str) -> bool:
+        """
+
+        :param command:  大写驼峰命名的任务名字
+        :return:
+        """
+        if command == 'start' or command == 'goto_main':
+            logger.error(f'Invalid command `{command}`')
+
+        try:
+            self.device.screenshot()
+            if command not in self.SKIP_APP_CHECK_TASKS and not self.device.app_is_running():
+                raise GameNotRunningError('Game not running')
+            module_name = 'script_task'
+            module_path = str(Path.cwd() / 'tasks' / command / (module_name+'.py'))
+            logger.info(f'module_path: {module_path}, module_name: {module_name}')
+            task_module = load_module(module_name, module_path)
+            task_module.ScriptTask(config=self.config, device=self.device).run()
+        except TaskEnd as e:
+            task_name = self._resolve_task_end_name(command, e)
+            if self._should_notify_task_end(task_name):
+                self.config.notifier.push(
+                    title=f'任务提醒',
+                    content=f"{I18n.trans_zh_cn(command)} 任务执行完毕，完成时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                )
+            return True
+        except EmulatorNotRunningError as e:
+            logger.warning(e)
+            self.config.task_call('Restart')
+            return False
+        except GameNotRunningError as e:
+            logger.warning(e)
+            self.config.task_call('Restart')
+            return False
+        except (GameStuckError, GameTooManyClickError) as e:
+            logger.error(e)
+            self.save_error_log()
+            logger.warning(f'Game stuck, {self.device.package} will be restarted in 10 seconds')
+            logger.warning('If you are playing by hand, please stop Alas')
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> GameStuckError or GameTooManyClickError")
+            self.config.task_call('Restart')
+            self.device.sleep(10)
+            return False
+        except GameBugError as e:
+            logger.warning(e)
+            self.save_error_log()
+            logger.warning('An error has occurred in Azur Lane game client, Alas is unable to handle')
+            logger.warning(f'Restarting {self.device.package} to fix it')
+            self.config.task_call('Restart')
+            self.device.sleep(10)
+            return False
+        except GamePageUnknownError:
+            logger.info('Game server may be under maintenance or network may be broken, check server status now')
+            # 这个还不重要 留着坑填
+            logger.critical('Game page unknown')
+            self.save_error_log()
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> GamePageUnknownError")
+            return False
+        except ScriptError as e:
+            logger.critical(e)
+            logger.critical('This is likely to be a mistake of developers, but sometimes just random issues')
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> ScriptError")
+            exit(1)
+        except RequestHumanTakeover as e:
+            logger.critical(e)
+            logger.critical('Request human takeover')
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> RequestHumanTakeover")
+            exit(1)
+        except Exception as e:
+            logger.exception(e)
+            self.save_error_log()
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> Exception occured")
+            exit(1)
+
+    def _server_restart_port(self) -> int:
+        """获取当前 WebUI 端口，用于实例主动请求 server 级重启。"""
+        return int(os.environ.get('OAS_WEBUI_PORT') or State.deploy_config.WebuiPort)
+
+    def _request_server_restart_from_instance(self) -> None:
+        """请求 server 执行 stop/start；失败也不兜底，随后由调用方直接退出进程。"""
+        port = self._server_restart_port()
+        url = f'http://127.0.0.1:{port}/{self.config_name}/restart_from_instance'
+        logger.warning(f'Request server restart from instance: {url}')
+        with urllib.request.urlopen(url, timeout=3) as response:
+            response.read()
+
+    def _exit_for_server_restart(self) -> None:
+        """full_recovery 失败后主动触发 server 重启，并立即强制退出当前脚本进程。"""
+        self._request_server_restart_from_instance()
+        os._exit(1)
+
+    def loop(self):
+        """
+        Main loop of scheduler.
+        :return:
+        """
+        logger.set_file_logger(self.config_name)
+        logger.info(f'Start scheduler loop: {self.config_name}')
+
+        while 1:
+            # Check update event from GUI
+            # if self.stop_event is not None:
+            #     if self.stop_event.is_set():
+            #         logger.info("Update event detected")
+            #         logger.info(f"Alas [{self.config_name}] exited.")
+            #         break
+
+            # Check game server maintenance
+            # self.checker.wait_until_available()
+            # if self.checker.is_recovered():
+            #     # There is an accidental bug hard to reproduce
+            #     # Sometimes, config won't be updated due to blocking
+            #     # even though it has been changed
+            #     # So update it once recovered
+            #     del_cached_property(self, 'config')
+            #     logger.info('Server or network is recovered. Restart game client')
+            #     self.config.task_call('Restart')
+
+            # Get task
+            task = self.get_next_task()
+            # 更新 gui的任务
+            # Init device and change server
+            # _ = self.device
+            # Skip first restart
+            if self.is_first_task and task == 'Restart':
+                logger.info('Skip task `Restart` at scheduler start')
+                self.config.task_delay(task='Restart', success=True, server=True)
+                del_cached_property(self, 'config')
+                continue
+            _ = self.device  # trigger cached_property if first access
+            if self._needs_recovery:
+                logger.warning('Emulator recovery requested, running full_recovery before task')
+                if not self.device.full_recovery():
+                    # full_recovery 失败后不再兜底，由当前实例主动请求 server 级 stop/start 并退出。
+                    logger.critical('full_recovery failed, request server-side restart from instance')
+                    self._exit_for_server_restart()
+                self._needs_recovery = False
+
+            # Run
+            logger.info(f'Scheduler: Start task `{task}`')
+            self.device.stuck_record_clear()
+            self.device.click_record_clear()
+            logger.hr(task, level=0)
+            success = self.run(inflection.camelize(task))
+            logger.info(f'Scheduler: End task `{task}`')
+            self.is_first_task = False
+
+            # Global recovery failure counter (Task 17). Replaces per-task accumulator.
+            if success:
+                if self.recovery_failure_count > 0:
+                    logger.info(
+                        f'Task success, reset recovery_failure_count from {self.recovery_failure_count} to 0'
+                    )
+                self.recovery_failure_count = 0
+            # Note: failure_record[task] still updated for telemetry / GUI inspection,
+            # but no longer drives exit. exit is driven by recovery_failure_count which
+            # accumulates only on full_recovery failures (Task 18).
+            failed = self.failure_record[task] if task in self.failure_record else 0
+            failed = 0 if success else failed + 1
+            self.failure_record[task] = failed
+
+            if success:
+                del_cached_property(self, 'config')
+                continue
+            elif self.config.script.error.handle_error:
+                # self.config.task_delay(success=False)
+                del_cached_property(self, 'config')
+                # self.checker.check_now()
+                continue
+            else:
+                break
+
+    def start_loop(self) -> None:
+        """
+        创建一个线程，运行loop
+        :return:
+        """
+        if self.loop_thread is None:
+            self.loop_thread = Thread(target=self.loop, name='Script_loop')
+            self.loop_thread.start()
+
+
+if __name__ == "__main__":
+    ensure_ocr_server_started()
+    script = Script("oas1")
+    print(script.gui_task_list())
+    print(script.config.gui_menu)

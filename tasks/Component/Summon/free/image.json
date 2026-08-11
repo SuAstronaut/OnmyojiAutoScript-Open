@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "summon_free",
+    "imageName": "summon_free.png",
+    "roiFront": "34,216,32,35",
+    "roiBack": "14,82,73,369",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "summon_free"
+  },
+  {
+    "itemName": "summon_free_page",
+    "imageName": "summon_free_page.png",
+    "roiFront": "154,23,153,28",
+    "roiBack": "91,5,269,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "summon_free_page"
+  },
+  {
+    "itemName": "free_blue_ticket",
+    "imageName": "free_blue_ticket.png",
+    "roiFront": "625,567,56,44",
+    "roiBack": "625,567,56,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "free_blue_ticket"
+  },
+  {
+    "itemName": "click_to_continue",
+    "imageName": "click_to_continue.png",
+    "roiFront": "584,672,113,30",
+    "roiBack": "529,653,224,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "点击继续"
+  }
+]

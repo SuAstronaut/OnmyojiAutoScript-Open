@@ -1,0 +1,264 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+import time
+
+from module.atom.image import RuleImage
+from module.atom.ocr import RuleOcr
+from module.logger import logger
+from tasks.Component.GeneralBuff.assets import GeneralBuffAssets
+from tasks.base_task import BaseTask
+
+
+class GeneralBuff(BaseTask, GeneralBuffAssets):
+
+    def open_buff(self):
+        """
+        打开buff的总界面
+        :return:
+        """
+        logger.info('打开 buff')
+        self.ui_click(self.I_BUFF_1, self.I_CLOUD, interval=2)
+
+        check_image = self.I_AWAKE
+        while 1:
+            self.screenshot()
+            if self.appear(check_image):
+                break
+
+            self.swipe(self.S_BUFF_UP, interval=2)
+
+    def close_buff(self):
+        """
+        关闭buff的总界面, 但是要确保buff界面已经打开了
+        :return:
+        """
+        logger.info('Close buff')
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CLOUD):
+                break
+            if self.appear_then_click(self.I_BUFF_1, interval=2):
+                continue
+
+    def click_buff(self, is_open: bool = True):
+        if is_open:
+            self.ui_click(self.I_CLOSE_RED, self.I_OPEN_YELLOW, interval=1, timeout=5)
+        else:
+            self.ui_click(self.I_OPEN_YELLOW, self.I_CLOSE_RED, interval=1, timeout=5)
+
+    def click_buff_image(self, is_open: bool = True):
+        if is_open:
+            self.ui_click(self.I_CLOSE_RED, self.I_OPEN_YELLOW, interval=1, timeout=5)
+        else:
+            self.ui_click(self.I_OPEN_YELLOW, self.I_CLOSE_RED, interval=1, timeout=5)
+
+    def get_area(self, buff: RuleOcr):
+        """
+        获取要点击的开关buff的区域
+        :param buff:
+        :return:  如果没有就返回None
+        """
+        # 防止邀请框挡住BUFF框架
+        self.reject_invite()
+        self.screenshot()
+        area = self.ocr_result(buff)
+        if area == tuple([0, 0, 0, 0]):
+            logger.warning(f'No {buff.name} buff')
+            return None
+
+        # 获取ROI背景区域的副本并更新Y坐标
+        x, y, w, h = self.I_BUFF_OFF.roi_back
+        self.I_BUFF_OFF.roi_back = x, int(area[1]), w, h
+
+        # 开始的x坐标就是文字的右边
+        start_x = area[0] + area[2] + 10  # 10是文字和开关之间的间隔
+        start_y = area[1] - 10
+        width = 80  # 开关的宽度 80够了
+        height = area[3] + 20
+        return int(start_x), int(start_y), int(width), int(height)
+
+    def set_switch_area(self, area):
+        """
+        设置开关的区域
+        :param area:
+        :return:
+        """
+        self.I_OPEN_YELLOW.roi_back = list(area)  # 动态设置roi
+        self.I_CLOSE_RED.roi_back = list(area)
+
+    def gold_50(self, is_open: bool = True):
+        """
+        金币50buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Gold 50 buff')
+        self.screenshot()
+        area = self.get_area(self.O_GOLD_50)
+        if not area:
+            logger.warning('No gold 50 buff')
+            return
+        self.set_switch_area(area)
+        self.click_buff(is_open)
+
+    def gold_100(self, is_open: bool = True):
+        """
+        金币100buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Gold 100 buff')
+        self.screenshot()
+        area = self.get_area(self.O_GOLD_100)
+        if not area:
+            logger.warning('No gold 100 buff')
+            return
+        self.set_switch_area(area)
+        self.click_buff(is_open)
+
+    def exp_50(self, is_open: bool = True):
+        """
+        经验50buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Exp 50 buff')
+        while 1:
+            self.screenshot()
+            area = self.get_area(self.O_EXP_50)
+            if not area:
+                logger.warning('No exp 50 buff')
+                continue
+            self.set_switch_area(area)
+
+            if not self.appear(self.I_OPEN_YELLOW) and not self.appear(self.I_CLOSE_RED):
+                logger.info('No exp 50 buff')
+                self.device.swipe(p2=(530, 240), p1=(580, 320))
+                time.sleep(1)
+            else:
+                break
+
+        self.click_buff(is_open)
+
+    def exp_100(self, is_open: bool = True):
+        """
+        经验100buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Exp 100 buff')
+        while 1:
+            self.screenshot()
+            area = self.get_area(self.O_EXP_100)
+            if not area:
+                logger.warning('No exp 100 buff')
+                continue
+            self.set_switch_area(area)
+
+            if not self.appear(self.I_OPEN_YELLOW) and not self.appear(self.I_CLOSE_RED):
+                logger.info('No exp 100 buff')
+                self.device.swipe(p2=(530, 240), p1=(580, 320))
+                time.sleep(1)
+            else:
+                break
+
+        self.click_buff(is_open)
+
+    def get_area_image(self, target: RuleImage) -> list:
+        """
+        获取觉醒加成或者是御魂加成所要点击的区域
+        因为实在的图片比ocr快
+        :param target:
+        :return:
+        """
+        logger.info(f'Get {target.name} buff area')
+        push_flag = True
+        while 1:
+            self.reject_invite()
+            self.screenshot()
+            if not target.match(self.device.image):
+                self.save_image(content=f'No {target.name} buff', push_flag=push_flag, image_type=True, wait_time=0)
+                push_flag = False
+                self.open_buff()
+            else:
+                break
+            # logger.info(f'front area: {target.roi_front}')
+            # logger.info(f'front center: {target.front_center()}')
+        start_x = int(target.front_center()[0] + 364)
+        start_y = int(target.roi_front[1])
+        width = 80
+        height = int(target.roi_front[3])
+        return [start_x, start_y, width, height]
+
+    def awake(self, is_open: bool = True):
+        """
+        觉醒buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Awake buff')
+        self.screenshot()
+        area = self.get_area_image(self.I_AWAKE)
+        if not area:
+            logger.warning('No awake buff')
+            return
+        self.set_switch_area(area)
+        self.click_buff_image(is_open)
+
+    def soul(self, is_open: bool = True):
+        """
+        御魂buff
+        :param is_open: 是否打开
+        :return:
+        """
+        logger.info('Soul buff')
+        self.screenshot()
+        area = self.get_area_image(self.I_SOUL)
+        if not area:
+            logger.warning('No soul buff')
+            return
+        self.set_switch_area(area)
+        self.click_buff_image(is_open)
+
+    def reject_invite(self):
+        from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
+        while 1:
+            self.screenshot()
+            if not (self.appear(gia.I_I_REJECT_1) or self.appear(gia.I_I_REJECT_2) or self.appear(gia.I_I_REJECT_3)):
+                break
+            if self.appear(gia.I_I_REJECT_3):
+                self.click(gia.I_I_REJECT_3, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_2):
+                self.click(gia.I_I_REJECT_2, 6)
+                continue
+            if self.appear(gia.I_I_REJECT_1):
+                self.click(gia.I_I_REJECT_1, 6)
+                continue
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+
+    c = Config('百鬼')
+    t = GeneralBuff(c)
+
+    t.open_buff()
+    # t.screenshot()
+    #
+    # t.awake(is_open=True)
+    # t.soul(is_open=True)
+    # t.gold_50(is_open=True)
+    # t.gold_100(is_open=True)
+    # t.exp_50(is_open=True)
+    # t.exp_100(is_open=True)
+
+    # t.awake(is_open=False)
+    # t.soul(is_open=False)
+    t.gold_50(is_open=False)
+    t.gold_100(is_open=False)
+    t.exp_50(is_open=False)
+    t.exp_100(is_open=False)
+    t.close_buff()
+

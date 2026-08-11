@@ -1,0 +1,9 @@
+[
+  {
+    "itemName": "swipe_lottery_box",
+    "roiFront": "625,180,30,232",
+    "roiBack": "625,400,30,232",
+    "mode": "default",
+    "description": "description"
+  }
+]

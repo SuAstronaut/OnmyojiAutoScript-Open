@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "main_goto_summon",
+    "imageName": "page_main_goto_summon.png",
+    "roiFront": "1073,174,57,65",
+    "roiBack": "571,153,586,124",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "summon_goto_main",
+    "imageName": "page_summon_goto_main.png",
+    "roiFront": "27,5,49,51",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_summon",
+    "imageName": "page_check_summon.png",
+    "roiFront": "581,594,68,66",
+    "roiBack": "316,528,594,174",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "main_goto_travel",
+    "imageName": "page_main_goto_travel.png",
+    "roiFront": "202,619,64,61",
+    "roiBack": "202,619,64,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_travel",
+    "imageName": "page_check_travel.png",
+    "roiFront": "1134,583,78,77",
+    "roiBack": "1134,583,78,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "珍旅居"
+  },
+  {
+    "itemName": "act_list_goto_act",
+    "imageName": "page_act_list_goto_act.png",
+    "roiFront": "1063,627,156,60",
+    "roiBack": "1007,552,272,166",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页前往活动"
+  },
+  {
+    "itemName": "check_act_list",
+    "imageName": "page_check_act_list.png",
+    "roiFront": "90,14,125,44",
+    "roiBack": "75,3,161,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页标志"
+  },
+  {
+    "itemName": "check_hero_test",
+    "imageName": "page_check_hero_test.png",
+    "roiFront": "148,10,133,48",
+    "roiBack": "137,0,157,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "英杰试炼左上角标志"
+  },
+  {
+    "itemName": "exploration_goto_hero_test",
+    "imageName": "page_exploration_goto_hero_test.png",
+    "roiFront": "837,630,58,56",
+    "roiBack": "7,605,1272,113",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往英杰试炼"
+  }
+]

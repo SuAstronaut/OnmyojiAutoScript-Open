@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "de_battle_time",
+    "roiFront": "619,60,38,30",
+    "roiBack": "619,60,38,30",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "逢魔开战剩余等待时间"
+  }
+]

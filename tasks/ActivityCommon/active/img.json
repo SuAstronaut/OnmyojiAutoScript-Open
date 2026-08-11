@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "active_store",
+    "imageName": "active_store.png",
+    "roiFront": "959,639,37,31",
+    "roiBack": "915,597,115,107",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动商店图标"
+  },
+  {
+    "itemName": "goto_active",
+    "imageName": "goto_active.png",
+    "roiFront": "1076,638,135,37",
+    "roiBack": "1040,623,213,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "前往活动"
+  }
+]

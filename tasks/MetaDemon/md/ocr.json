@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "md_fatigue",
+    "roiFront": "1109,22,114,34",
+    "roiBack": "1106,17,124,41",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "疲劳度"
+  }
+]

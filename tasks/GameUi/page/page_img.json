@@ -1,0 +1,254 @@
+[
+  {
+    "itemName": "check_main",
+    "imageName": "page_check_main.png",
+    "roiFront": "801,109,38,37",
+    "roiBack": "49,98,1033,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院"
+  },
+  {
+    "itemName": "page_main_relax",
+    "imageName": "page_main_relax.png",
+    "roiFront": "49,607,52,45",
+    "roiBack": "49,607,52,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "闲庭"
+  },
+  {
+    "itemName": "main_goto_exploration",
+    "imageName": "page_main_goto_exploration.png",
+    "roiFront": "493,116,45,75",
+    "roiBack": "243,100,933,211",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院->探索"
+  },
+  {
+    "itemName": "check_exploration",
+    "imageName": "page_check_exploration.png",
+    "roiFront": "1146,175,21,22",
+    "roiBack": "1069,76,192,120",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索界面"
+  },
+  {
+    "itemName": "exploration_expand",
+    "imageName": "exploration_expand.png",
+    "roiFront": "1241,118,20,20",
+    "roiBack": "1241,118,20,20",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索玩法展开"
+  },
+  {
+    "itemName": "exploration_goto_awake_zone",
+    "imageName": "page_exploration_goto_awake_zone.png",
+    "roiFront": "57,628,57,61",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->觉醒"
+  },
+  {
+    "itemName": "exploration_goto_soul_zone",
+    "imageName": "page_exploration_goto_soul_zone.png",
+    "roiFront": "159,633,55,55",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->御魂"
+  },
+  {
+    "itemName": "exploration_goto_realm_raid",
+    "imageName": "page_exploration_goto_realm_raid.png",
+    "roiFront": "248,636,67,48",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->突破"
+  },
+  {
+    "itemName": "exploration_goto_goryou_realm",
+    "imageName": "page_exploration_goto_goryou_realm.png",
+    "roiFront": "353,639,47,45",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "探索->御灵"
+  },
+  {
+    "itemName": "exploration_goto_delegation",
+    "imageName": "page_exploration_goto_delegation.png",
+    "roiFront": "445,638,60,50",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->委派"
+  },
+  {
+    "itemName": "exploration_goto_secret_zones",
+    "imageName": "page_exploration_goto_secret_zones.png",
+    "roiFront": "546,628,61,55",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->秘闻"
+  },
+  {
+    "itemName": "exploration_goto_area_boss",
+    "imageName": "page_exploration_goto_area_boss.png",
+    "roiFront": "640,638,51,45",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->地狱鬼王"
+  },
+  {
+    "itemName": "exploration_goto_heian_kitan",
+    "imageName": "page_exploration_goto_heian_kitan.png",
+    "roiFront": "739,643,52,44",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->平安奇谭"
+  },
+  {
+    "itemName": "exploration_goto_six_gates",
+    "imageName": "page_exploration_goto_six_gates.png",
+    "roiFront": "838,640,60,49",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->六道之门椒图"
+  },
+  {
+    "itemName": "exploration_goto_six_gates_jue",
+    "imageName": "page_exploration_goto_six_gates_jue.png",
+    "roiFront": "838,640,60,49",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->六道之门觉"
+  },
+  {
+    "itemName": "exploration_goto_bondling_fairyland",
+    "imageName": "page_exploration_goto_bondling_fairyland.png",
+    "roiFront": "937,639,56,49",
+    "roiBack": "37,617,1169,87",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索->契灵"
+  },
+  {
+    "itemName": "check_awake",
+    "imageName": "page_check_awake.png",
+    "roiFront": "159,20,123,34",
+    "roiBack": "159,20,123,34",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "觉醒之塔界面"
+  },
+  {
+    "itemName": "check_soul_zones",
+    "imageName": "page_check_soul_zones1.png",
+    "roiFront": "117,29,68,29",
+    "roiBack": "102,3,176,88",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂副本界面"
+  },
+  {
+    "itemName": "check_realm_raid",
+    "imageName": "page_check_realm_raid.png",
+    "roiFront": "113,625,86,77",
+    "roiBack": "113,625,86,77",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "个突界面"
+  },
+  {
+    "itemName": "check_goryou",
+    "imageName": "page_check_goryou.png",
+    "roiFront": "158,21,121,29",
+    "roiBack": "158,21,121,29",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御灵之境界面"
+  },
+  {
+    "itemName": "check_delegation",
+    "imageName": "page_check_delegation.png",
+    "roiFront": "839,132,49,45",
+    "roiBack": "839,132,49,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "委派界面"
+  },
+  {
+    "itemName": "check_secret_zones",
+    "imageName": "page_check_secret_zones.png",
+    "roiFront": "163,30,124,35",
+    "roiBack": "99,16,203,63",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "秘闻副本界面"
+  },
+  {
+    "itemName": "check_area_boss",
+    "imageName": "page_check_area_boss.png",
+    "roiFront": "20,320,150,130",
+    "roiBack": "20,320,150,130",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "地域鬼王界面"
+  },
+  {
+    "itemName": "check_heian_kitan",
+    "imageName": "page_check_heian_kitan.png",
+    "roiFront": "27,48,47,39",
+    "roiBack": "27,48,47,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "平安奇谭界面"
+  },
+  {
+    "itemName": "check_six_gates",
+    "imageName": "page_check_six_gates.png",
+    "roiFront": "1174,621,55,44",
+    "roiBack": "1174,621,55,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "六道之门椒图界面"
+  },
+  {
+    "itemName": "check_six_gates_jue",
+    "imageName": "page_check_six_gates_jue.png",
+    "roiFront": "1174,621,55,44",
+    "roiBack": "1174,621,55,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "六道之门觉界面"
+  },
+  {
+    "itemName": "check_bondling_fairyland",
+    "imageName": "page_check_bondling_fairyland.png",
+    "roiFront": "614,660,56,49",
+    "roiBack": "614,660,56,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "契灵之境界面"
+  },
+  {
+    "itemName": "ryoutoppa_goto_realmraid",
+    "imageName": "page_ryoutoppa_goto_realmraid.png",
+    "roiFront": "1201,234,62,105",
+    "roiBack": "1201,234,62,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "个突->寮突"
+  }
+]

@@ -1,0 +1,173 @@
+[
+  {
+    "itemName": "pet_house",
+    "imageName": "pet_pet_house.png",
+    "roiFront": "1012,414,56,25",
+    "roiBack": "952,412,144,60",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "宠物小屋"
+  },
+  {
+    "itemName": "pet_claw",
+    "imageName": "pet_pet_claw.png",
+    "roiFront": "1171,625,55,56",
+    "roiBack": "1171,625,55,56",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "爪印"
+  },
+  {
+    "itemName": "main_goto_town",
+    "imageName": "page_main_goto_town.png",
+    "roiFront": "706,249,61,57",
+    "roiBack": "200,120,951,298",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_town",
+    "imageName": "page_check_town.png",
+    "roiFront": "1026,106,68,82",
+    "roiBack": "765,98,402,96",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_main",
+    "imageName": "page_town_goto_main.png",
+    "roiFront": "1017,231,78,73",
+    "roiBack": "302,216,868,127",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_duel",
+    "imageName": "page_town_goto_duel.png",
+    "roiFront": "756,142,48,68",
+    "roiBack": "357,126,657,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_demon_encounter",
+    "imageName": "page_town_goto_demon_encounter.png",
+    "roiFront": "617,135,51,75",
+    "roiBack": "232,121,873,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_hunt",
+    "imageName": "page_town_goto_hunt.png",
+    "roiFront": "475,138,46,69",
+    "roiBack": "275,122,520,100",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_draft_duel",
+    "imageName": "page_town_goto_draft_duel.png",
+    "roiFront": "335,159,55,72",
+    "roiBack": "170,145,567,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "协同对弈"
+  },
+  {
+    "itemName": "town_goto_hyakkisen",
+    "imageName": "page_town_goto_hyakkisen.png",
+    "roiFront": "192,145,48,67",
+    "roiBack": "86,130,447,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "百鬼奕"
+  },
+  {
+    "itemName": "check_duel",
+    "imageName": "page_check_duel.png",
+    "roiFront": "110,10,64,38",
+    "roiBack": "76,9,162,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "斗技page"
+  },
+  {
+    "itemName": "check_demon_encounter",
+    "imageName": "page_check_demon_encounter.png",
+    "roiFront": "544,15,81,39",
+    "roiBack": "544,15,81,39",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_netherworld",
+    "imageName": "page_check_netherworld.png",
+    "roiFront": "575,30,46,25",
+    "roiBack": "553,1,81,68",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "check_kirin",
+    "imageName": "page_check_kirin.png",
+    "roiFront": "91,20,96,36",
+    "roiBack": "42,8,248,72",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "check_hyakkisen",
+    "imageName": "page_check_hyakkisen.png",
+    "roiFront": "1014,607,53,55",
+    "roiBack": "986,587,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "check_draft_duel",
+    "imageName": "page_check_draft_duel.png",
+    "roiFront": "1051,612,56,58",
+    "roiBack": "1029,594,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "town_goto_hyakkiyakou",
+    "imageName": "page_town_goto_hyakkiyakou.png",
+    "roiFront": "880,165,53,69",
+    "roiBack": "827,149,148,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "町进入百鬼"
+  },
+  {
+    "itemName": "town_goto_hyakkiyakou_2",
+    "imageName": "page_town_goto_hyakkiyakou_2.png",
+    "roiFront": "714,139,16,63",
+    "roiBack": "657,111,123,123",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "町进入百鬼_2"
+  },
+  {
+    "itemName": "check_kyakkiyakou",
+    "imageName": "page_check_kyakkiyakou.png",
+    "roiFront": "305,567,56,64",
+    "roiBack": "280,545,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]

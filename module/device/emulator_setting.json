@@ -1,0 +1,10 @@
+{
+  "renderer_mode": "vk", // 设置中心-性能-显卡渲染模式选择
+  "net_bridge_open": "false", // 设置中心-网络-是否开启桥接模式
+  "app_keptlive": "false",  // 设置中心-其他-应用运行-是否后台挂机保活
+  "root_permission": "true", // 设置中心-其他-ROOT权限-是否开启
+  "resolution_mode": "tablet.3", // 设置中心-显示-分辨率设置-模式选择
+  "resolution_width.custom": "1280.000000", // 设置中心-显示-分辨率设置-自定义宽
+  "resolution_height.custom": "720.000000", // 设置中心-显示-分辨率设置-自定义高
+  "resolution_dpi.custom": "240.000000" // 设置中心-显示-分辨率设置-自定义DPI
+}

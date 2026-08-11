@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>OAS 遥控台</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070b14;
+      --panel: rgba(18, 25, 40, .92);
+      --panel-2: #182136;
+      --line: rgba(148, 163, 184, .18);
+      --text: #f7f8fb;
+      --muted: #94a3b8;
+      --violet: #a78bfa;
+      --violet-strong: #7c3aed;
+      --green: #34d399;
+      --red: #fb7185;
+      --amber: #fbbf24;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 88% 2%, rgba(124, 58, 237, .28), transparent 34%),
+        radial-gradient(circle at 4% 36%, rgba(14, 165, 233, .14), transparent 28%),
+        var(--bg);
+    }
+    button, input, textarea, select { font: inherit; }
+    button, select { touch-action: manipulation; }
+    .shell { width: min(100%, 760px); margin: 0 auto; padding: 18px 14px 108px; }
+    .topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 8px 2px 18px; }
+    .eyebrow { color: var(--violet); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 5px 0 2px; font-size: clamp(28px, 8vw, 42px); letter-spacing: -.04em; }
+    .subtitle { color: var(--muted); font-size: 13px; }
+    .status-pill { display: inline-flex; align-items: center; gap: 7px; min-width: max-content; padding: 8px 11px; border: 1px solid var(--line); border-radius: 999px; background: rgba(15, 23, 42, .7); color: var(--muted); font-size: 12px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 0 4px rgba(148, 163, 184, .1); }
+    .status-pill.online { color: #d1fae5; border-color: rgba(52, 211, 153, .35); }
+    .status-pill.online .status-dot { background: var(--green); box-shadow: 0 0 0 4px rgba(52, 211, 153, .12); }
+    .card { margin-bottom: 14px; padding: 17px; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgba(30, 41, 59, .88), rgba(12, 18, 31, .94)); box-shadow: 0 18px 50px rgba(0, 0, 0, .22); backdrop-filter: blur(15px); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 15px; }
+    h2 { margin: 0; font-size: 17px; letter-spacing: -.01em; }
+    .card-note { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    label { color: #cbd5e1; font-size: 13px; font-weight: 650; }
+    input, textarea, select {
+      width: 100%; min-height: 46px; padding: 11px 12px;
+      border: 1px solid var(--line); border-radius: 13px; outline: none;
+      color: var(--text); background: rgba(3, 7, 18, .48);
+      transition: border-color .18s, box-shadow .18s;
+    }
+    textarea { min-height: 82px; resize: vertical; line-height: 1.55; }
+    input:focus, textarea:focus, select:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(167, 139, 250, .13); }
+    .hint { color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .switch-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 0 15px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+    .switch-copy strong { display: block; font-size: 15px; }
+    .switch-copy span { display: block; color: var(--muted); margin-top: 4px; font-size: 12px; }
+    .switch { position: relative; width: 50px; height: 29px; flex: 0 0 auto; }
+    .switch input { position: absolute; opacity: 0; pointer-events: none; }
+    .switch span { position: absolute; inset: 0; border-radius: 999px; background: #334155; transition: .2s; }
+    .switch span::after { content: ""; position: absolute; width: 23px; height: 23px; left: 3px; top: 3px; border-radius: 50%; background: white; transition: .2s; box-shadow: 0 3px 9px rgba(0,0,0,.3); }
+    .switch input:checked + span { background: var(--violet-strong); }
+    .switch input:checked + span::after { transform: translateX(21px); }
+    .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { min-height: 46px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: var(--panel-2); font-weight: 750; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: wait; }
+    .btn.primary { border-color: transparent; background: linear-gradient(135deg, #8b5cf6, #6d28d9); box-shadow: 0 10px 26px rgba(124, 58, 237, .28); }
+    .btn.green { color: #d1fae5; border-color: rgba(52, 211, 153, .3); background: rgba(6, 78, 59, .35); }
+    .btn.red { color: #ffe4e6; border-color: rgba(251, 113, 133, .3); background: rgba(127, 29, 29, .3); }
+    .log-toolbar { display: flex; gap: 8px; }
+    .mini { min-height: 34px; padding: 6px 10px; font-size: 12px; border-radius: 10px; }
+    .log-box { height: 310px; overflow: auto; padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: #030712; color: #cbd5e1; font: 12px/1.62 "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; word-break: break-word; overscroll-behavior: contain; }
+    .save-dock { position: fixed; z-index: 10; left: 0; right: 0; bottom: 0; padding: 12px max(14px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); background: linear-gradient(180deg, transparent, rgba(7, 11, 20, .92) 25%); }
+    .save-dock .btn { display: block; width: min(calc(100% - 28px), 732px); margin: 0 auto; }
+    .toast { position: fixed; z-index: 30; left: 50%; bottom: 92px; max-width: calc(100% - 28px); transform: translate(-50%, 18px); padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: #111827; color: var(--text); font-size: 13px; opacity: 0; pointer-events: none; transition: .22s; box-shadow: 0 14px 35px rgba(0,0,0,.38); }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.error { border-color: rgba(251, 113, 133, .45); color: #fecdd3; }
+    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .card { padding: 15px; } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Onmyoji Automation</div>
+        <h1>OAS 遥控台</h1>
+        <div class="subtitle">通过 Tailscale 安全访问家里的脚本</div>
+      </div>
+      <div id="connection-status" class="status-pill"><span class="status-dot"></span><span>连接中</span></div>
+    </header>
+
+    <section class="card" aria-labelledby="script-title">
+      <div class="card-head">
+        <div><h2 id="script-title">脚本控制</h2><div class="card-note" id="script-state">正在读取状态</div></div>
+      </div>
+      <div class="field" style="margin-bottom:12px">
+        <label for="script-select">选择 JSON 配置</label>
+        <select id="script-select"></select>
+      </div>
+      <div class="button-row">
+        <button id="start-button" class="btn green" type="button">启动脚本</button>
+        <button id="stop-button" class="btn red" type="button">停止脚本</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="foster-title">
+      <div class="card-head">
+        <div><h2 id="foster-title">结界寄养</h2><div class="card-note">同区与跨区好友会统一比较收益</div></div>
+      </div>
+      <div class="switch-row">
+        <div class="switch-copy"><strong>寄养任务不顶号时段</strong><span>只顺延结界寄养；其他任务和整个 OAS 都不会暂停</span></div>
+        <label class="switch" aria-label="寄养任务不顶号时间开关"><input id="no-takeover-enable" type="checkbox"><span></span></label>
+      </div>
+      <div class="grid" style="margin-bottom:14px">
+        <div class="field">
+          <label for="quiet-start-1">第一段开始</label>
+          <input id="quiet-start-1" type="time" step="60">
+        </div>
+        <div class="field">
+          <label for="quiet-end-1">第一段结束</label>
+          <input id="quiet-end-1" type="time" step="60">
+        </div>
+        <div class="field">
+          <label for="quiet-start-2">第二段开始</label>
+          <input id="quiet-start-2" type="time" step="60">
+        </div>
+        <div class="field">
+          <label for="quiet-end-2">第二段结束</label>
+          <input id="quiet-end-2" type="time" step="60">
+        </div>
+        <div class="field full"><div class="hint">开始和结束相同表示不用这一段；支持跨午夜，例如 23:00 到 07:00。</div></div>
+      </div>
+      <div class="switch-row">
+        <div class="switch-copy"><strong>自动结界寄养</strong><span>对应 OAS 的“结界寄养”任务总开关</span></div>
+        <label class="switch" aria-label="结界寄养任务开关"><input id="utilize-enable" type="checkbox"><span></span></label>
+      </div>
+      <div class="switch-row">
+        <div class="switch-copy"><strong>指定好友寄养</strong><span>关闭后恢复原来的全列表自动选卡</span></div>
+        <label class="switch" aria-label="指定好友寄养开关"><input id="specified-enable" type="checkbox"><span></span></label>
+      </div>
+      <div class="grid">
+        <div class="field full">
+          <label for="same-names">同区好友昵称</label>
+          <textarea id="same-names" placeholder="例如：蝶髓、好友乙"></textarea>
+          <div class="hint">多个昵称可用逗号、顿号或换行隔开。</div>
+        </div>
+        <div class="field full">
+          <label for="different-names">跨区好友昵称</label>
+          <textarea id="different-names" placeholder="例如：偷弟、偷弟小号"></textarea>
+        </div>
+        <div class="field">
+          <label for="utilize-rule">蹭卡类型</label>
+          <select id="utilize-rule">
+            <option value="default">斗鱼和太鼓</option>
+            <option value="fish">只选斗鱼</option>
+            <option value="kaiko">只选太鼓</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="coefficient">蹭卡系数</label>
+          <input id="coefficient" type="number" min="1" max="999" inputmode="numeric">
+          <div class="hint">多少勾玉折算 100 体力。</div>
+        </div>
+        <div class="field full">
+          <label for="utilize-next-run">下轮寄养</label>
+          <input id="utilize-next-run" type="text" readonly>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="activation-title">
+      <div class="card-head">
+        <div><h2 id="activation-title">结界挂卡</h2><div class="card-note">放自己的结界卡，并按最低收益筛选</div></div>
+      </div>
+      <div class="switch-row">
+        <div class="switch-copy"><strong>自动放自己的结界卡</strong><span>对应 OAS 的“结界挂卡”任务总开关</span></div>
+        <label class="switch" aria-label="结界挂卡任务开关"><input id="activation-enable" type="checkbox"><span></span></label>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label for="card-type">挂卡类型</label>
+          <select id="card-type">
+            <option value="太鼓">太鼓</option>
+            <option value="斗鱼">斗鱼</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="card-star">挂卡星级</label>
+          <select id="card-star">
+            <option value="全部">全部（自动选最高收益）</option>
+            <option value="六星">六星</option>
+            <option value="五星">五星</option>
+            <option value="四星">四星</option>
+            <option value="三星">三星</option>
+          </select>
+        </div>
+        <div class="field full">
+          <div class="switch-row" style="margin:0">
+            <div class="switch-copy"><strong>找不到时切换卡类型</strong><span>例如没有太鼓时改找斗鱼</span></div>
+            <label class="switch" aria-label="切换卡类型开关"><input id="change-card-type" type="checkbox"><span></span></label>
+          </div>
+        </div>
+        <div class="field full">
+          <div class="switch-row" style="margin:0">
+            <div class="switch-copy"><strong>收益筛选</strong><span>关闭后忽略下面两个最低收益</span></div>
+            <label class="switch" aria-label="收益筛选开关"><input id="yield-filter-enable" type="checkbox"><span></span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="min-taiko">太鼓每小时最低收益</label>
+          <input id="min-taiko" type="number" min="0" max="999" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="min-fish">斗鱼每小时最低收益</label>
+          <input id="min-fish" type="number" min="0" max="999" inputmode="numeric">
+        </div>
+        <div class="field full">
+          <label for="activation-next-run">下轮配卡</label>
+          <input id="activation-next-run" type="text" readonly>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="log-title">
+      <div class="card-head">
+        <div><h2 id="log-title">运行日志</h2><div class="card-note" id="log-source">最近日志与实时输出</div></div>
+        <div class="log-toolbar">
+          <button id="reload-log" class="btn mini" type="button">刷新</button>
+          <button id="clear-log" class="btn mini" type="button">清屏</button>
+        </div>
+      </div>
+      <div id="log-box" class="log-box" role="log" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="save-dock"><button id="save-button" class="btn primary" type="button">保存全部设置</button></div>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const ui = {
+      script: $('script-select'), state: $('script-state'), connection: $('connection-status'),
+      noTakeoverEnable: $('no-takeover-enable'), quietStart1: $('quiet-start-1'), quietEnd1: $('quiet-end-1'),
+      quietStart2: $('quiet-start-2'), quietEnd2: $('quiet-end-2'),
+      utilizeEnable: $('utilize-enable'), enable: $('specified-enable'), same: $('same-names'), different: $('different-names'),
+      rule: $('utilize-rule'), coefficient: $('coefficient'), log: $('log-box'),
+      utilizeNextRun: $('utilize-next-run'), activationEnable: $('activation-enable'),
+      cardType: $('card-type'), cardStar: $('card-star'), changeCardType: $('change-card-type'),
+      yieldFilterEnable: $('yield-filter-enable'), minTaiko: $('min-taiko'), minFish: $('min-fish'),
+      activationNextRun: $('activation-next-run'),
+      logSource: $('log-source'), save: $('save-button'), start: $('start-button'), stop: $('stop-button'),
+      toast: $('toast')
+    };
+    let socket = null;
+    let socketGeneration = 0;
+    let toastTimer = null;
+
+    function notify(message, error = false) {
+      clearTimeout(toastTimer);
+      ui.toast.textContent = message;
+      ui.toast.className = `toast show${error ? ' error' : ''}`;
+      toastTimer = setTimeout(() => ui.toast.className = 'toast', 2800);
+    }
+
+    async function request(url, options = {}) {
+      const response = await fetch(url, {cache: 'no-store', ...options});
+      if (!response.ok) {
+        let detail = `${response.status} ${response.statusText}`;
+        try { detail = (await response.json()).detail || detail; } catch (_) {}
+        throw new Error(detail);
+      }
+      const text = await response.text();
+      return text ? JSON.parse(text) : null;
+    }
+
+    function setConnection(online, text) {
+      ui.connection.classList.toggle('online', online);
+      ui.connection.querySelector('span:last-child').textContent = text;
+    }
+
+    function appendLog(text) {
+      if (!text) return;
+      const nearBottom = ui.log.scrollHeight - ui.log.scrollTop - ui.log.clientHeight < 80;
+      ui.log.textContent += (ui.log.textContent ? '\n' : '') + text.replace(/\r?\n$/, '');
+      const lines = ui.log.textContent.split('\n');
+      if (lines.length > 800) ui.log.textContent = lines.slice(-800).join('\n');
+      if (nearBottom) ui.log.scrollTop = ui.log.scrollHeight;
+    }
+
+    function findArgument(groups, name, group = null) {
+      const sources = group ? [groups?.[group] || []] : Object.values(groups || {});
+      for (const items of sources) {
+        const found = items.find((item) => item.name === name);
+        if (found) return found.value;
+      }
+      return undefined;
+    }
+
+    function toHtmlTime(value) {
+      return typeof value === 'string' && value.length >= 5 ? value.slice(0, 5) : '00:00';
+    }
+
+    function toApiTime(value) {
+      return `${value || '00:00'}:00`;
+    }
+
+    async function loadScripts() {
+      const scripts = await request('/config_list');
+      ui.script.innerHTML = '';
+      for (const name of scripts) {
+        const option = document.createElement('option');
+        option.value = name; option.textContent = name;
+        ui.script.appendChild(option);
+      }
+      const remembered = localStorage.getItem('oas-mobile-script');
+      if (remembered && scripts.includes(remembered)) ui.script.value = remembered;
+      if (!scripts.length) throw new Error('没有可用的 JSON 配置');
+      await switchScript();
+    }
+
+    async function loadSettings() {
+      const scriptName = encodeURIComponent(ui.script.value);
+      const [utilizeGroups, activationGroups] = await Promise.all([
+        request(`/${scriptName}/KekkaiUtilize/args`),
+        request(`/${scriptName}/KekkaiActivation/args`)
+      ]);
+
+      ui.noTakeoverEnable.checked = Boolean(findArgument(utilizeGroups, 'enable', 'no_takeover_config'));
+      ui.quietStart1.value = toHtmlTime(findArgument(utilizeGroups, 'start_time_1', 'no_takeover_config'));
+      ui.quietEnd1.value = toHtmlTime(findArgument(utilizeGroups, 'end_time_1', 'no_takeover_config'));
+      ui.quietStart2.value = toHtmlTime(findArgument(utilizeGroups, 'start_time_2', 'no_takeover_config'));
+      ui.quietEnd2.value = toHtmlTime(findArgument(utilizeGroups, 'end_time_2', 'no_takeover_config'));
+
+      ui.utilizeEnable.checked = Boolean(findArgument(utilizeGroups, 'enable', 'scheduler'));
+      ui.enable.checked = Boolean(findArgument(utilizeGroups, 'specified_friend_enable'));
+      ui.same.value = findArgument(utilizeGroups, 'specified_same_server_friend_names') || '';
+      ui.different.value = findArgument(utilizeGroups, 'specified_different_server_friend_names') || '';
+      ui.rule.value = findArgument(utilizeGroups, 'utilize_rule') || 'default';
+      ui.coefficient.value = findArgument(utilizeGroups, 'tai_ko_percentage') ?? 50;
+      ui.utilizeNextRun.value = findArgument(utilizeGroups, 'next_run', 'scheduler') || '';
+
+      ui.activationEnable.checked = Boolean(findArgument(activationGroups, 'enable', 'scheduler'));
+      ui.cardType.value = findArgument(activationGroups, 'card_type') || '太鼓';
+      ui.cardStar.value = findArgument(activationGroups, 'card_star') || '全部';
+      ui.changeCardType.checked = Boolean(findArgument(activationGroups, 'change_card_type'));
+      ui.yieldFilterEnable.checked = Boolean(findArgument(activationGroups, 'enable_yield_filter'));
+      ui.minTaiko.value = findArgument(activationGroups, 'min_taiko_num') ?? 8;
+      ui.minFish.value = findArgument(activationGroups, 'min_fish_num') ?? 16;
+      ui.activationNextRun.value = findArgument(activationGroups, 'next_run', 'scheduler') || '';
+      refreshConditionalFields();
+    }
+
+    async function setArgument(task, group, name, type, value) {
+      const params = new URLSearchParams({types: type, value: String(value)});
+      const url = `/${encodeURIComponent(ui.script.value)}/${task}/${group}/${name}/value?${params}`;
+      await request(url, {method: 'PUT'});
+    }
+
+    function refreshConditionalFields() {
+      for (const input of [ui.quietStart1, ui.quietEnd1, ui.quietStart2, ui.quietEnd2]) {
+        input.disabled = !ui.noTakeoverEnable.checked;
+      }
+      for (const input of [ui.minTaiko, ui.minFish]) {
+        input.disabled = !ui.yieldFilterEnable.checked;
+      }
+    }
+
+    async function saveSettings() {
+      const coefficient = Number(ui.coefficient.value);
+      const minTaiko = Number(ui.minTaiko.value);
+      const minFish = Number(ui.minFish.value);
+      if (!Number.isInteger(coefficient) || coefficient < 1 || coefficient > 999) {
+        notify('蹭卡系数需要填写 1～999 的整数', true); return;
+      }
+      if (![minTaiko, minFish].every((value) => Number.isInteger(value) && value >= 0 && value <= 999)) {
+        notify('太鼓和斗鱼最低收益需要填写 0～999 的整数', true); return;
+      }
+      ui.save.disabled = true; ui.save.textContent = '正在保存…';
+      try {
+        await setArgument('KekkaiUtilize', 'no_takeover_config', 'enable', 'boolean', ui.noTakeoverEnable.checked);
+        await setArgument('KekkaiUtilize', 'no_takeover_config', 'start_time_1', 'time', toApiTime(ui.quietStart1.value));
+        await setArgument('KekkaiUtilize', 'no_takeover_config', 'end_time_1', 'time', toApiTime(ui.quietEnd1.value));
+        await setArgument('KekkaiUtilize', 'no_takeover_config', 'start_time_2', 'time', toApiTime(ui.quietStart2.value));
+        await setArgument('KekkaiUtilize', 'no_takeover_config', 'end_time_2', 'time', toApiTime(ui.quietEnd2.value));
+
+        await setArgument('KekkaiUtilize', 'scheduler', 'enable', 'boolean', ui.utilizeEnable.checked);
+        await setArgument('KekkaiUtilize', 'utilize_config', 'specified_friend_enable', 'boolean', ui.enable.checked);
+        await setArgument('KekkaiUtilize', 'utilize_config', 'specified_same_server_friend_names', 'string', ui.same.value.trim());
+        await setArgument('KekkaiUtilize', 'utilize_config', 'specified_different_server_friend_names', 'string', ui.different.value.trim());
+        await setArgument('KekkaiUtilize', 'utilize_config', 'utilize_rule', 'enum', ui.rule.value);
+        await setArgument('KekkaiUtilize', 'utilize_config', 'tai_ko_percentage', 'integer', coefficient);
+
+        await setArgument('KekkaiActivation', 'scheduler', 'enable', 'boolean', ui.activationEnable.checked);
+        await setArgument('KekkaiActivation', 'activation_config', 'card_type', 'enum', ui.cardType.value);
+        await setArgument('KekkaiActivation', 'activation_config', 'card_star', 'enum', ui.cardStar.value);
+        await setArgument('KekkaiActivation', 'activation_config', 'change_card_type', 'boolean', ui.changeCardType.checked);
+        await setArgument('KekkaiActivation', 'activation_config', 'enable_yield_filter', 'boolean', ui.yieldFilterEnable.checked);
+        await setArgument('KekkaiActivation', 'activation_config', 'min_taiko_num', 'integer', minTaiko);
+        await setArgument('KekkaiActivation', 'activation_config', 'min_fish_num', 'integer', minFish);
+        notify('全部设置已保存，并通知脚本热重载');
+      } catch (error) { notify(`保存失败：${error.message}`, true); }
+      finally { ui.save.disabled = false; ui.save.textContent = '保存全部设置'; }
+    }
+
+    async function loadRecentLog() {
+      ui.log.textContent = '';
+      try {
+        const data = await request(`/mobile/api/log-tail/${encodeURIComponent(ui.script.value)}?lines=220`);
+        ui.logSource.textContent = data.file ? `来源：${data.file}` : '暂无历史日志，等待实时输出';
+        appendLog((data.lines || []).join('\n'));
+        ui.log.scrollTop = ui.log.scrollHeight;
+      } catch (error) { appendLog(`读取历史日志失败：${error.message}`); }
+    }
+
+    function connectSocket() {
+      const generation = ++socketGeneration;
+      if (socket) {
+        socket.onclose = null;
+        socket.close();
+      }
+      const scheme = location.protocol === 'https:' ? 'wss' : 'ws';
+      socket = new WebSocket(`${scheme}://${location.host}/ws/${encodeURIComponent(ui.script.value)}`);
+      setConnection(false, '连接中');
+      socket.onopen = () => { setConnection(true, '已连接'); socket.send('get_state'); socket.send('get_schedule'); };
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.state !== undefined) ui.state.textContent = `运行状态：${String(data.state)}`;
+        } catch (_) { appendLog(event.data); }
+      };
+      socket.onclose = () => {
+        if (generation !== socketGeneration) return;
+        setConnection(false, '已断开');
+        setTimeout(() => { if (generation === socketGeneration && ui.script.value) connectSocket(); }, 3000);
+      };
+      socket.onerror = () => setConnection(false, '连接异常');
+    }
+
+    async function switchScript() {
+      localStorage.setItem('oas-mobile-script', ui.script.value);
+      ui.state.textContent = '正在读取状态';
+      await Promise.all([loadSettings(), loadRecentLog()]);
+      connectSocket();
+    }
+
+    async function controlScript(action) {
+      const button = action === 'start' ? ui.start : ui.stop;
+      button.disabled = true;
+      try { await request(`/${encodeURIComponent(ui.script.value)}/${action}`); notify(action === 'start' ? '已发送启动命令' : '已发送停止命令'); }
+      catch (error) { notify(`操作失败：${error.message}`, true); }
+      finally { button.disabled = false; }
+    }
+
+    ui.script.addEventListener('change', () => switchScript().catch((e) => notify(e.message, true)));
+    ui.noTakeoverEnable.addEventListener('change', refreshConditionalFields);
+    ui.yieldFilterEnable.addEventListener('change', refreshConditionalFields);
+    ui.save.addEventListener('click', saveSettings);
+    ui.start.addEventListener('click', () => controlScript('start'));
+    ui.stop.addEventListener('click', () => controlScript('stop'));
+    $('reload-log').addEventListener('click', loadRecentLog);
+    $('clear-log').addEventListener('click', () => { ui.log.textContent = ''; });
+    window.addEventListener('beforeunload', () => { socketGeneration++; if (socket) socket.close(); });
+
+    loadScripts().catch((error) => { notify(`初始化失败：${error.message}`, true); appendLog(error.stack || error.message); });
+  </script>
+</body>
+</html>

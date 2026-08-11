@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "courtyard_affairs_notes",
+    "imageName": "courtyard_affairs_notes.png",
+    "roiFront": "782,415,27,31",
+    "roiBack": "134,363,968,189",
+    "method": "Template matching multi scale",
+    "threshold": 0.8,
+    "description": "进入庭院事务记录按钮"
+  },
+  {
+    "itemName": "courtyard_affairs_notes1",
+    "imageName": "courtyard_affairs_notes1.png",
+    "roiFront": "510,478,20,22",
+    "roiBack": "134,363,968,189",
+    "method": "Template matching multi scale",
+    "threshold": 0.8,
+    "description": "进入庭院事务记录按钮1"
+  },
+  {
+    "itemName": "courtyard_affairs_button",
+    "imageName": "courtyard_affairs_button.png",
+    "roiFront": "1189,299,35,33",
+    "roiBack": "1168,127,76,389",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入庭院事务按钮"
+  },
+  {
+    "itemName": "courtyard_affairs_page",
+    "imageName": "courtyard_affairs_page.png",
+    "roiFront": "277,41,160,51",
+    "roiBack": "277,41,160,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院事务主页面"
+  },
+  {
+    "itemName": "complete_with_one_click",
+    "imageName": "complete_with_one_click.png",
+    "roiFront": "1128,600,70,67",
+    "roiBack": "1128,600,70,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "一键完成"
+  },
+  {
+    "itemName": "success_claimed",
+    "imageName": "success_claimed.png",
+    "roiFront": "319,33,160,51",
+    "roiBack": "319,33,160,51",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "领取成功"
+  },
+  {
+    "itemName": "daily",
+    "imageName": "daily.png",
+    "roiFront": "1140,135,63,52",
+    "roiBack": "1126,90,112,362",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "日常"
+  },
+  {
+    "itemName": "no_tasks_complete",
+    "imageName": "no_tasks_complete.png",
+    "roiFront": "537,225,210,32",
+    "roiBack": "537,225,210,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "暂无可完成的任务"
+  }
+]

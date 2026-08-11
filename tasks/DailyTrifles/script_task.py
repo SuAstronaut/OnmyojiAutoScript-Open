@@ -1,0 +1,439 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+from time import sleep
+
+import copy
+
+from module.base.timer import Timer
+from module.exception import TaskEnd
+from module.logger import logger
+from tasks.Component.GeneralBuff.general_buff import GeneralBuff
+from tasks.Component.Summon.summon import Summon
+from tasks.DailyTrifles.assets import DailyTriflesAssets
+from tasks.DailyTrifles.page import page_store_sign, page_mall_special, page_summon_store, page_shikigami_debris
+from tasks.GameUi.page import page_summon, page_guild, page_friends, page_main
+from tasks.Restart.back_up.back_up_log import BackUp
+from tasks.Restart.big_god.sign_in import BigGodSignIn
+from tasks.Restart.login import LoginHandler
+from tasks.GameUi.page import win_list
+
+class ScriptTask(Summon, DailyTriflesAssets, GeneralBuff):
+    """ 每日琐事 """
+
+    def run(self):
+        con = self.config.daily_trifles.trifles_config
+        # 日志备份
+        if con.enable_backup_log:
+            logger.hr('日志备份', 3)
+            BackUp().run()
+
+        if con.enable_mail or con.enable_courtyard_affairs:
+            login_handler = LoginHandler(config=self.config)
+            if con.enable_mail:
+                logger.hr('邮件领取', 3)
+                self.ui_goto_page(page_main)
+                login_handler.harvest(con.enable_mail)
+            if con.enable_courtyard_affairs:
+                logger.hr('庭院事务', 3)
+                self.ui_goto_page(page_main)
+                login_handler.courtyard_affairs()
+
+        # 每日召唤
+        if con.one_summon:
+            logger.hr('每日召唤', 3)
+            self.summon_one()
+        # 召唤厕纸
+        if con.broken_amulet:
+            logger.hr('召唤厕纸', 3)
+            self._broken_amulet(con.broken_amulet)
+        # 式神集结
+        if con.shikigami_massed:
+            logger.hr('式神集结', 3)
+            self.massed_run()
+        if con.copper_box:
+            # 召唤商店 铜铃礼包
+            logger.hr('铜铃礼包', 3)
+            self.run_summon_store()
+        # 友情点 （现在已经可以通过庭院任务获取了）
+        # if con.friend_love:
+        #     logger.hr('友情点', 3)
+        #     self.run_friend_love()
+        # 吉闻
+        if con.luck_msg:
+            logger.hr('吉闻', 3)
+            self.run_luck_msg()
+        # 商店签到
+        if con.store_sign:
+            logger.hr('商店签到', 3)
+            self.run_store_sign()
+        # 购买寿司体力
+        if con.buy_sushi_count > 0:
+            logger.hr('购买寿司体力', 3)
+            self.run_buy_sushi()
+        # 招募寮成员
+        if con.recruit_members:
+            logger.hr('招募寮成员', 3)
+            self.run_recruit_members()
+        # 抽奖箱抽奖
+        if con.lottery_box:
+            logger.hr('抽奖箱抽奖', 3)
+            self.check_lottery_box()
+        # 召唤式神碎片
+        if con.shikigami_debris:
+            logger.hr('召唤式神碎片', 3)
+            self.run_shikigami_debris()
+
+        # 大神签到
+        if con.big_god_sign_in:
+            logger.hr('大神签到', 3)
+            try:
+                BigGodSignIn().start_sign_in(str(self.config.script.device.serial))
+            except Exception as e:
+                logger.error(f"大神签到异常: {e}")
+                self.push_notify(content=f"大神签到异常: {e}")
+
+        self.set_next_run('DailyTrifles', success=True, finish=False)
+        raise TaskEnd('DailyTrifles')
+
+    def run_shikigami_debris(self):
+        self.ui_goto_page(page_shikigami_debris)
+        self.ui_click(self.I_PAGE_SHIKIGAMI_DEBRIS, self.I_UI_SURE)
+        self.ui_click_until_disappear(self.I_UI_SURE)
+
+    def check_lottery_box(self):
+        self.ui_goto_page(page_guild)
+        while 1:
+            self.screenshot()
+            if self.wait_until_appear_then_click(self.I_LOTTERY_BOX, wait_time=2):
+                if self.wait_until_appear(self.I_LOTTERY_BOX_PAGE, wait_time=5):
+                    break
+            else:
+                logger.info(f'未发现抽奖箱')
+                return
+
+        while 1:
+            self.screenshot()
+            if self.ui_reward_appear_click():
+                continue
+            # 获得奖励
+            cu, re, total = self.ocr_result(self.O_LOTTERY_NUMBER)
+            if cu + re == total and cu != 0:
+                logger.info(f'抽奖次数: [{cu}]')
+                self.swipe(self.S_SWIPE_LOTTERY_BOX, interval=5)
+                sleep(5)
+            else:
+                logger.info(f'没有可以抽奖的次数')
+                return
+
+    def run_summon_store(self):
+        self.ui_goto_page(page_summon_store)
+        timer = Timer(3)
+        timer.start()
+        while 1:
+            if timer.reached():
+                logger.info('未出现召唤商店')
+                return
+            self.screenshot()
+            if self.appear(self.I_SUMMON_STORE_FREE_OVER):
+                break
+            if self.appear_then_click(self.I_SUMMON_STORE_FREE_1, interval=1):
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_SUMMON_STORE_FREE, interval=1):
+                sleep(1)
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_SUMMON_STORE_LUCKY, interval=1):
+                timer.reset()
+                continue
+
+        click_count = 0
+        timer.reset()
+        clicked = False
+        while click_count < 5:
+            if timer.reached():
+                logger.info('未点击召唤商店')
+                break
+            self.screenshot()
+            if self.ui_reward_appear_click():
+                click_count = 0
+            if self.appear(self.I_FREE_3_OVER) and self.appear(self.I_FREE_2_OVER) and self.appear(self.I_FREE_1_OVER):
+                break
+            for btn in [self.I_FREE_1, self.I_FREE_2, self.I_FREE_3]:
+                if self.appear_then_click(btn, interval=1):
+                    timer.reset()
+                    click_count += 1
+                    clicked = True
+                    break
+        if clicked:
+            self.save_image(wait_time=0, task_name='铜铃礼包')
+
+    def massed_run(self):
+        self.ui_goto_page(page_summon)
+        if not self.appear(self.I_MASSED):
+            return
+
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_MASSED, interval=1):
+                continue
+            if self.appear_then_click(self.I_AFTER_ON, interval=1):
+                break
+            if self.appear(self.I_BATTLE):
+                break
+            x, y = self.I_AFTER_ON.coord()
+            self.device.click(x, y)
+
+        click_count = 0
+        while click_count <= 3:
+            self.screenshot()
+            if self.appear_then_click(self.I_MASSED, interval=1):
+                continue
+            if self.appear_then_click(self.I_AFTER_ON, interval=1):
+                continue
+            if self.appear_then_click(self.I_BATTLE, interval=1):
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                click_count += 1
+                continue
+            if self.appear_then_click(self.I_CLICK_ANY_POSITION, interval=1):
+                continue
+            if self.appear_then_click(win_list, interval=1):
+                click_count = 0
+                continue
+
+    def run_luck_msg(self):
+        self.ui_goto_page(page_friends)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_LUCK_TITLE):
+                break
+            if self.appear_then_click(self.I_FRIENDSHIP_UP, interval=1):
+                continue
+            if self.appear_then_click(self.I_LUCK_MSG, interval=1):
+                continue
+        logger.info('开始查看吉闻')
+        check_timer = Timer(5)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+
+            if self.appear_then_click(self.I_CLICK_BLESS, interval=1):
+                continue
+            if self.appear_then_click(self.I_ONE_CLICK_BLESS, interval=1):
+                continue
+            if self.ui_reward_appear_click():
+                logger.info('领取奖励 of luck msg')
+                break
+            if check_timer.reached():
+                self.save_image(content="收取吉闻超时", wait_time=0, image_type=True, push_flag=True)
+                logger.warning('没有任何吉闻')
+                break
+
+    def run_friend_love(self):
+        self.ui_goto_page(page_friends)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_L_LOVE):
+                break
+            if self.appear_then_click(self.I_FRIENDSHIP_UP, interval=1):
+                continue
+            if self.appear_then_click(self.I_L_FRIENDS, interval=1):
+                continue
+            if self.appear_then_click(self.I_L_FRIENDS_SELECT, interval=1):
+                continue
+        logger.info('开始好友点赞')
+        check_timer = Timer(5)
+        check_timer.start()
+        while 1:
+            self.screenshot()
+
+            if self.appear_then_click(self.I_L_COLLECT, interval=1):
+                continue
+            if self.ui_reward_appear_click():
+                logger.info('领取奖励 of friend love')
+                break
+            if check_timer.reached():
+                self.save_image(content="收取友情点超时", wait_time=0, image_type=True, push_flag=True)
+                logger.warning('没有任何点赞')
+                break
+
+    def run_store_sign(self):
+        self.ui_goto_page(page_store_sign)
+        timer = Timer(5)
+        timer.start()
+        while 1:
+            if timer.reached():
+                self.save_image(content="每日签到超时", push_flag=True, wait_time=0, image_type=True)
+                return
+            self.reject_invite()
+            self.screenshot()
+            if self.appear(self.I_GIFT_SIGN):
+                break
+            if self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1):
+                continue
+        logger.info('进入商店签到')
+        sleep(1)  # 等个动画
+        self.reject_invite()
+        self.screenshot()
+        if not self.appear(self.I_GIFT_SIGN):
+            logger.warning('没有礼包签到')
+            self.save_image(content="未发现每日签到", push_flag=True, wait_time=0, image_type=True)
+            return
+
+        if self.ui_get_reward(self.I_GIFT_SIGN, click_interval=2.5):
+            logger.info('领取奖励 of gift sign')
+
+    def run_buy_sushi(self):
+
+        # 进入Special
+        self.ui_goto_page(page_mall_special)
+
+        def detect_buy_count(base_element) -> (int, int):
+            # 返回count,price
+            MAX_PRICE = 9999
+            MAX_COUNT = 9999
+            roi = copy.deepcopy(base_element.roi_front)
+            roi[0] = roi[0] + roi[2]
+            roi[1] = roi[1] + roi[3] - 30
+            roi[2] = 60
+            roi[3] = 30
+            self.O_STORE_SUSHI_PRICE.roi = roi
+            _price = self.O_STORE_SUSHI_PRICE.detect_text(self.device.image)
+            # 保守策略，避免OCR错误购买
+            try:
+                _price = int(_price)
+            except Exception as e:
+                _price = MAX_PRICE
+
+            if _price < 60:
+                return 0, MAX_PRICE
+            _count = (_price - 60) / 20
+            return _count, _price
+
+        roi = None
+        # 购买体力
+        while 1:
+            self.screenshot()
+            # count, price = detect_buy_count(roi)
+            # if count >= self.config.model.daily_trifles.trifles_config.buy_sushi_count:
+            #     break
+            if self.appear(self.I_STORE_COST_TYPE_JADE):
+                count, price = detect_buy_count(self.I_STORE_COST_TYPE_JADE)
+                if count >= self.config.daily_trifles.trifles_config.buy_sushi_count:
+                    break
+                self.ui_click_until_disappear(self.I_STORE_COST_TYPE_JADE, interval=2)
+                logger.info(f"使用{price}勾玉购买体力")
+                continue
+
+            if self.appear(self.I_SPECIAL_SUSHI):
+                # 此处确定当前购买体力所需勾玉数量的位置,用于后续识别
+                count, price = detect_buy_count(self.I_SPECIAL_SUSHI)
+                if count >= self.config.daily_trifles.trifles_config.buy_sushi_count:
+                    break
+                self.ui_click(self.I_SPECIAL_SUSHI, stop=self.I_STORE_COST_TYPE_JADE, interval=2)
+                continue
+        return
+
+    def run_recruit_members(self):
+        self.ui_goto_page(page_guild)
+        flush_count = 0
+        timer = Timer(5)
+        timer.start()
+        while flush_count < 5:
+            self.screenshot()
+            if timer.reached():
+                self.push_notify(content="招募寮成员超时，或没有管理权限")
+                return
+            if self.appear_then_click(self.I_POSTS):
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_MEMBER_FLUSH, interval=1):
+                flush_count += 1
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_MEMBER_ADD, interval=0.5):
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_RECRUIT_MEMBERS, interval=1):
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_GUILD_MANAGEMENT_1, interval=1):
+                timer.reset()
+                continue
+            if self.appear_then_click(self.I_GUILD_MANAGEMENT, interval=1):
+                continue
+            if self.appear_then_click(self.I_GUILD_INFO, interval=1):
+                timer.reset()
+                continue
+        logger.info('进入招募成员')
+
+    def _broken_amulet(self, num: int):
+        """
+
+        :param num:
+        :return:
+        """
+        if num <= 0:
+            logger.warning('没有碎符')
+            return
+
+        def click_confirm():
+            self.wait_until_appear(self.I_BM_CONFIRM)
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_BM_CONFIRM):
+                    break
+                else:
+                    self.appear_then_click(self.I_BM_CONFIRM, interval=1)
+            logger.info('退出碎符')
+
+        logger.hr('碎符')
+        self.ui_goto_page(page_summon)
+        self.screenshot()
+        number = self.O_BA_AMOUNT_1.ocr(self.device.image)
+        if number == 0:
+            logger.warning('没有碎符')
+            return
+        num = min(number, num)
+        logger.info(f'碎符数量: {number}')
+        count = 0
+        self.wait_until_appear(self.I_BM_ENTER)
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_BM_ENTER):
+                break
+            if self.appear_then_click(self.I_BM_ENTER, interval=1):
+                continue
+        count += 10
+        logger.info('进入碎符')
+        while 1:
+            self.screenshot()
+            sleep(0.5)
+
+            if not self.appear(self.I_BM_CONFIRM):
+                continue
+            if count >= num:
+                logger.info(f'碎符完成: {count}')
+                click_confirm()
+                break
+            cu, re, total = self.O_BA_AMOUNT_2.ocr(self.device.image)
+            if cu <= 10 and total == 10:
+                logger.info(f'碎符计数: {count}. 当前: {cu}. 总计: {total}')
+                click_confirm()
+                break
+            if self.appear_then_click(self.I_BM_AGAIN, interval=1):
+                logger.info(f'碎符计数: {count}. 当前: {cu}')
+                self.device.click_record_clear()
+                count += 10
+                continue
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+
+    c = Config('du')
+    t = ScriptTask(c)
+
+    t.run()
+    # t.run_shikigami_debris()

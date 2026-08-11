@@ -1,0 +1,177 @@
+# This Python file uses the following encoding: utf-8
+# @author runhey
+# github https://github.com/runhey
+import time
+
+import random
+import re
+from module.logger import logger
+from tasks.Component.Summon.assets import SummonAssets
+from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_summon
+from tasks.base_task import BaseTask
+
+
+class Summon(GameUi, BaseTask, SummonAssets):
+
+
+    def summon(self):
+        """
+        召唤, 就是随机画一个， 划线
+        :return:
+        """
+        self.screenshot()
+        random_swipe = random.randint(0, 3)
+        target_swipe = None
+        match random_swipe:
+            case 0: target_swipe = self.S_RANDOM_SWIPE_1
+            case 1: target_swipe = self.S_RANDOM_SWIPE_2
+            case 2: target_swipe = self.S_RANDOM_SWIPE_3
+            case 3: target_swipe = self.S_RANDOM_SWIPE_4
+            case _: target_swipe = self.S_RANDOM_SWIPE_1
+        self.swipe(target_swipe, interval=0.5)
+
+
+
+    def summon_one(self):
+        """
+        确保在召唤界面,每日召唤一次
+        召唤结束后回到 召唤主界面
+        :return:
+        """
+        logger.info('Summon one')
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BLUE_TICKET):
+                break
+            self.ui_goto_page(page_summon)
+        while True:
+            ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
+            # 处理 None 和空字符串
+            if ticket_info is None or ticket_info == '':
+                ticket_info = 0
+            else:
+                # 使用正则表达式提取字符串中的数字
+                match = re.search(r'\d+', ticket_info)
+                if match:
+                    ticket_info = int(match.group())
+                else:
+                    logger.warning(f'Invalid ticket_info value: {ticket_info}, expected a numeric string')
+                    ticket_info = 0  # 将无效值设置为默认值 0
+            if ticket_info <= 0:
+                logger.warning('There is no any one blue ticket')
+                return
+            # 某些情况下滑动异常
+            self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_ONE_TICKET):
+                    break
+                if self.appear_then_click(self.I_BLUE_TICKET, interval=1):
+                    continue
+
+            # 画一张票
+            time.sleep(0.5)
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_SM_CONFIRM, interval=0.6):
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM)
+                    break
+                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
+                    self.push_notify('抽卡出货了')
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
+                    break
+                if self.appear_then_click(self.I_BACK_CLOSE, interval=0.8):
+                    continue
+                if self.appear(self.I_ONE_TICKET, interval=1):
+                    # 某些时候会点击到 “语言召唤”
+                    if self.appear_then_click(self.I_CANCEL, interval=0.8):
+                        continue
+                    self.summon()
+                    continue
+            logger.info('Summon one success')
+
+    def summon_free_once(self):
+        """
+        确保在召唤界面,每日召唤一次
+        召唤结束后回到 召唤主界面
+        :return:
+        """
+        logger.info('Summon free')
+        self.ui_goto_page(page_summon)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_SUMMON_FREE_PAGE):
+                break
+            if self.appear_then_click(self.I_SUMMON_FREE, interval=1.5):
+                continue
+        while True:
+            ticket_info = self.O_FREE_TICKET.ocr(self.device.image)
+            # 处理 None 和空字符串
+            if ticket_info is None or ticket_info == '':
+                ticket_info = 0
+            else:
+                # 使用正则表达式提取字符串中的数字
+                match = re.search(r'\d+', ticket_info)
+                if match:
+                    ticket_info = int(match.group())
+                else:
+                    logger.warning(f'Invalid ticket_info value: {ticket_info}, expected a numeric string')
+                    ticket_info = 0  # 将无效值设置为默认值 0
+            if ticket_info <= 0:
+                logger.warning('There is no any one blue ticket')
+                return
+            # 某些情况下滑动异常
+            self.S_RANDOM_SWIPE_1.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_2.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_3.name = 'S_RANDOM_SWIPE'
+            self.S_RANDOM_SWIPE_4.name = 'S_RANDOM_SWIPE'
+
+            while 1:
+                if self.appear(self.I_FREE_BLUE_TICKET):
+                    self.ui_click_until_disappear(self.I_FREE_BLUE_TICKET)
+                    break
+
+            # 画一张票
+            time.sleep(0.5)
+            summon_swipe = False
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_UI_SURE):
+                    break
+                if self.appear(self.I_CLICK_TO_CONTINUE):
+                    self.save_image(task_name='免费召唤', image_type=True)
+                    self.ui_click_until_disappear(self.I_CLICK_TO_CONTINUE, interval=1)
+                    continue
+                if self.appear(self.I_SM_CONFIRM, interval=0.6):
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM)
+                    break
+                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
+                    self.push_notify('抽卡出货了')
+                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
+                    break
+                if self.appear_then_click(self.I_BACK_CLOSE, interval=0.8):
+                    continue
+                # 某些时候会点击到 “语言召唤”
+                if self.appear_then_click(self.I_CANCEL, interval=0.8):
+                    continue
+                if self.appear_then_click(self.I_SKIP_SUMMON):
+                    summon_swipe = True
+                    continue
+                if not summon_swipe:
+                    self.summon()
+                    time.sleep(2)
+                    continue
+            logger.info('Summon one success')
+
+
+if __name__ == '__main__':
+    from module.config.config import Config
+
+    c = Config('4399')
+    t = Summon(c)
+
+    t.summon_free_once()

@@ -1,0 +1,136 @@
+name: Check upstream run_now_2
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: check-upstream-run-now-2
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Prepare a reviewed upstream update
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      UPSTREAM_URL: https://github.com/FLAG12321/OnmyojiAutoScript.git
+      UPSTREAM_BRANCH: run_now_2
+      UPDATE_BRANCH: automation/upstream-run-now-2
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch and compare upstream
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="$(tr -d '[:space:]' < .github/upstream-run_now_2.sha)"
+          git remote add feature-upstream "$UPSTREAM_URL"
+          git fetch --no-tags feature-upstream "$UPSTREAM_BRANCH"
+          latest="$(git rev-parse FETCH_HEAD)"
+
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          echo "short=${latest:0:7}" >> "$GITHUB_OUTPUT"
+
+          if [[ "$base" == "$latest" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new upstream commit." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Upstream changed: $base -> $latest" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Apply source-only changes
+        if: steps.compare.outputs.changed == 'true'
+        id: apply
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.compare.outputs.base }}"
+          latest="${{ steps.compare.outputs.latest }}"
+          patch_file="$RUNNER_TEMP/upstream.patch"
+
+          git cat-file -e "${base}^{commit}" 2>/dev/null || git fetch --no-tags feature-upstream "$base"
+          git diff --binary "$base" "$latest" -- \
+            . \
+            ':(exclude).github/**' \
+            ':(exclude)config/**' \
+            ':(exclude)log/**' \
+            ':(exclude)toolkit/**' \
+            ':(exclude)**/*.exe' \
+            ':(exclude)**/*.dll' \
+            ':(exclude)**/*.pyd' \
+            ':(exclude)**/*.so' \
+            ':(exclude)**/*.pyc' \
+            ':(exclude)**/*.zip' \
+            > "$patch_file"
+
+          if [[ -s "$patch_file" ]] && ! git apply --3way --index "$patch_file"; then
+            git reset --hard HEAD
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+            echo "The upstream patch conflicts with main." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          printf '%s\n' "$latest" > .github/upstream-run_now_2.sha
+          git add .github/upstream-run_now_2.sha
+          changed_files="$(git diff --cached --name-only)"
+
+          if printf '%s\n' "$changed_files" | grep -Eiq '\.(exe|dll|pyd|so|pyc|zip)$' || \
+             git diff --cached -U0 | grep -Eiq 'card_key|sitecustomize|device[_ -]?bind|machine[_ -]?code|/get_status|identity[^[:space:]]*\.pyd'; then
+            git reset --hard HEAD
+            echo "result=blocked" >> "$GITHUB_OUTPUT"
+            echo "Blocked: possible licensing, device-binding, or compiled code was detected." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "result=ready" >> "$GITHUB_OUTPUT"
+          printf '### Candidate files\n```text\n%s\n```\n' "$changed_files" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create or update candidate pull request
+        if: steps.apply.outputs.result == 'ready'
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="${{ steps.compare.outputs.latest }}"
+          short="${{ steps.compare.outputs.short }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$UPDATE_BRANCH"
+          git commit -m "chore: review upstream run_now_2 $short"
+          git push --force origin "HEAD:refs/heads/$UPDATE_BRANCH"
+
+          pr_number="$(gh pr list --state open --head "$UPDATE_BRANCH" --json number --jq '.[0].number // empty')"
+          body="检测到朋友仓库 run_now_2 的新提交：$latest。这个 PR 已排除工作流、用户配置、工具包、可执行文件和编译模块；合并前仍需检查兼容性并运行测试。"
+          if [[ -z "$pr_number" ]]; then
+            gh pr create --base main --head "$UPDATE_BRANCH" --title "上游候选更新：run_now_2 $short" --body "$body"
+          else
+            gh pr edit "$pr_number" --title "上游候选更新：run_now_2 $short" --body "$body"
+          fi
+
+      - name: Report an update that needs manual handling
+        if: steps.apply.outputs.result == 'conflict' || steps.apply.outputs.result == 'blocked'
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="${{ steps.apply.outputs.result }}"
+          latest="${{ steps.compare.outputs.latest }}"
+          short="${{ steps.compare.outputs.short }}"
+          title="上游更新需人工处理：run_now_2 $short"
+          if ! gh issue list --state all --limit 100 --json title --jq '.[].title' | grep -Fxq "$title"; then
+            gh issue create --title "$title" --body "检测到上游提交 $latest，自动处理结果为 $result。main 没有被修改，请人工检查。"
+          fi

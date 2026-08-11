@@ -22,3 +22,13 @@ Gitee 用户名和私人令牌只保存在 GitHub Actions Repository secrets 中
 
 外部仓库不能直接覆盖 `main`。后续的上游检查任务会先在隔离分支中抓取、
 分类并测试改动；授权、设备绑定、可执行文件和核心控制层改动必须经过检查。
+
+## 朋友仓库更新检查
+
+`.github/workflows/check-upstream-run-now-2.yml` 每 6 小时检查一次朋友仓库的
+`run_now_2` 分支，也可以在 GitHub Actions 页面手动运行。
+
+- 能安全应用的增量会进入候选分支并建立 Pull Request，不会直接覆盖 `main`；
+- 冲突或疑似授权、设备绑定、编译模块的内容只会创建 Issue 提醒；
+- 工作流、用户配置、日志、工具包及常见二进制文件不会自动导入；
+- 合并候选 Pull Request 后，基准提交号会更新，下一轮只比较后续变化。

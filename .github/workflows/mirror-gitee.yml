@@ -17,7 +17,7 @@ jobs:
   mirror:
     name: Push main to Gitee
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
 
     steps:
       - name: Check out the complete repository
@@ -39,7 +39,10 @@ jobs:
         env:
           GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          GIT_TERMINAL_PROMPT: "0"
         run: |
+          git config --global http.version HTTP/1.1
+          git config --global http.lowSpeedLimit 1024
+          git config --global http.lowSpeedTime 600
           git remote add gitee-auth "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/solar-astronauts/onmyoji-auto-script-open.git"
-          git push gitee-auth HEAD:main
-
+          git push --verbose --progress gitee-auth HEAD:main

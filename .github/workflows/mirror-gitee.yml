@@ -1,0 +1,45 @@
+name: Mirror main to Gitee
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-main-to-gitee
+  cancel-in-progress: true
+
+jobs:
+  mirror:
+    name: Push main to Gitee
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out the complete repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate required secrets
+        shell: bash
+        env:
+          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          test -n "$GITEE_USERNAME" || { echo "Missing GITEE_USERNAME"; exit 1; }
+          test -n "$GITEE_TOKEN" || { echo "Missing GITEE_TOKEN"; exit 1; }
+
+      - name: Push the current main commit to Gitee
+        shell: bash
+        env:
+          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          git remote add gitee-auth "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/solar-astronauts/onmyoji-auto-script-open.git"
+          git push gitee-auth HEAD:main
+
